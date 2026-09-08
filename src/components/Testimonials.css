@@ -1,0 +1,253 @@
+/* ==========================================================================
+   Testimonials Section UI/UX Enhanced
+   ========================================================================== */
+
+.testimonials-section {
+  padding: 80px 0 90px;
+  background-color: var(--bg-main);
+  position: relative;
+}
+
+.testimonials-header {
+  text-align: center;
+  margin-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.testimonials-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--dusty-rose, #C47A85);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.testimonials-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--text-dark, #2D2225);
+  line-height: 1.3;
+}
+
+.title-divider {
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--rose-accent, #E0869A) 0%, transparent 100%);
+  border-radius: 2px;
+  margin-top: 12px;
+}
+
+/* Card Container */
+.testimonial-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-xl, 24px);
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 48px;
+  align-items: center;
+  box-shadow: 0 20px 48px rgba(74, 18, 30, 0.05), 0 2px 8px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(224, 134, 154, 0.25);
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.testimonial-card:hover {
+  box-shadow: 0 24px 56px rgba(74, 18, 30, 0.08);
+}
+
+/* Portrait Side */
+.testimonial-portrait-side {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.portrait-frame {
+  width: 100%;
+  height: 320px;
+  border-radius: var(--radius-lg, 16px);
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(74, 18, 30, 0.12);
+  position: relative;
+  background-color: #F9ECEF;
+}
+
+.portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.testimonial-card:hover .portrait-img {
+  transform: scale(1.05);
+}
+
+.portrait-badge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2D8A56;
+  border: 1px solid rgba(45, 138, 86, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Content Side - Fully Centered Alignment */
+.testimonial-content-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  position: relative;
+}
+
+.testimonial-quote {
+  font-size: 1.15rem;
+  color: var(--text-dark, #2D2225);
+  line-height: 2;
+  font-weight: 400;
+  margin-bottom: 28px;
+  max-width: 650px;
+}
+
+.testimonial-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding-top: 20px;
+  border-top: 1px dashed rgba(224, 134, 154, 0.3);
+}
+
+.testimonial-author-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.author-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-burgundy, #4A121E);
+}
+
+.author-role {
+  font-size: 0.82rem;
+  color: var(--text-muted, #7A6B6E);
+}
+
+.author-stars-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFF8F9;
+  padding: 6px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(232, 169, 86, 0.25);
+}
+
+.author-stars {
+  display: flex;
+  gap: 3px;
+}
+
+.rating-score {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #D9822B;
+}
+
+/* Trust Badges Strip */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.trust-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(224, 134, 154, 0.25);
+  border-radius: var(--radius-lg, 16px);
+  padding: 20px 24px;
+  box-shadow: 0 4px 16px rgba(74, 18, 30, 0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.trust-badge-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(74, 18, 30, 0.07);
+  border-color: rgba(224, 134, 154, 0.5);
+}
+
+.trust-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #FFF0F3 0%, #FDE9EF 100%);
+  color: var(--primary-burgundy, #4A121E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(224, 134, 154, 0.3);
+}
+
+.trust-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trust-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark, #2D2225);
+}
+
+.trust-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted, #7A6B6E);
+  line-height: 1.4;
+}
+
+/* Responsive UI Adaptations */
+@media (max-width: 900px) {
+  .testimonial-card {
+    grid-template-columns: 1fr;
+    padding: 32px 24px;
+    gap: 24px;
+  }
+
+  .portrait-frame {
+    height: 240px;
+  }
+
+  .trust-strip {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

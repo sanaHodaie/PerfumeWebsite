@@ -1,0 +1,353 @@
+/* BestSellers.css */
+
+.bestsellers-section {
+  padding: 60px 0 80px;
+  background-color: var(--bg-main);
+  overflow: hidden; /* جلوگیری از اسکرول افقی اضافی */
+}
+
+.bestsellers-layout {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 48px;
+  align-items: stretch;
+}
+
+.bestsellers-list-column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.bestsellers-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(232, 201, 197, 0.5);
+}
+
+.bestsellers-eyebrow {
+  font-size: 0.82rem;
+  color: var(--dusty-rose);
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.bestsellers-title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary-burgundy);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.view-all-link:hover {
+  color: var(--deep-burgundy);
+  transform: translateX(-3px);
+}
+
+/* Compact Vertical List */
+.bestsellers-compact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.bestseller-item-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--white);
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(122, 38, 54, 0.03);
+  border: 1px solid rgba(232, 201, 197, 0.35);
+  transition: all var(--transition-smooth);
+  cursor: pointer;
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.bestseller-item-card:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 10px 28px rgba(122, 38, 54, 0.08);
+  border-color: var(--dusty-rose);
+}
+
+/* رتبه به فونت فارسی */
+.bestseller-rank {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: rgba(122, 38, 54, 0.3);
+  min-width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.bestseller-item-card:hover .bestseller-rank {
+  color: var(--primary-burgundy);
+}
+
+.bestseller-thumbnail {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-sm);
+  background-color: #FAF6F3;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.bestseller-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform var(--transition-fast);
+}
+
+.bestseller-item-card:hover .bestseller-thumb-img {
+  transform: scale(1.08);
+}
+
+.bestseller-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* جلوگیری از سرریز متن */
+}
+
+.bestseller-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bestseller-item-card:hover .bestseller-name {
+  color: var(--primary-burgundy);
+}
+
+.bestseller-en-name {
+  font-size: 0.72rem;
+  color: var(--text-subtle);
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bestseller-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bestseller-price {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-burgundy);
+  white-space: nowrap;
+}
+
+.bestseller-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stars-row {
+  display: flex;
+  gap: 1px;
+}
+
+.rating-score {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.bestseller-add-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(232, 201, 197, 0.25);
+  color: var(--primary-burgundy);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.bestseller-add-btn:hover {
+  background-color: var(--primary-burgundy);
+  color: var(--white);
+  transform: scale(1.08);
+}
+
+.bestseller-add-btn.added {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+/* Art Column */
+.bestsellers-art-column {
+  display: flex;
+}
+
+.art-card {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--deep-burgundy) 0%, var(--primary-burgundy) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 16px 40px rgba(74, 24, 34, 0.2);
+  position: relative;
+}
+
+.art-visual {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.art-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.art-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(74, 24, 34, 0.1) 0%,
+    rgba(74, 24, 34, 0.95) 100%
+  );
+}
+
+.art-content {
+  padding: 32px;
+  color: var(--white);
+  z-index: 2;
+  margin-top: -30px;
+}
+
+.art-tag {
+  font-size: 0.78rem;
+  color: var(--soft-blush);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.art-heading {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.art-text {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+
+.art-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--white);
+  color: var(--primary-burgundy);
+  padding: 12px 26px;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+}
+
+/* ====================================================
+   Responsive - تنظیمات ریسپانسیو برای حل مشکل موبایل
+   ==================================================== */
+@media (max-width: 992px) {
+  .bestsellers-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bestsellers-section {
+    padding: 40px 0 60px;
+  }
+
+  /* تنظیم پدینگ و گپ کارت‌ها در موبایل */
+  .bestseller-item-card {
+    padding: 10px 12px; /* کم کردن پدینگ داخلی */
+    gap: 10px; /* کم کردن فاصله المان‌ها */
+  }
+
+  .bestseller-rank {
+    min-width: 18px;
+    font-size: 1rem;
+  }
+
+  /* کوچک‌تر کردن عکس محصول در موبایل */
+  .bestseller-thumbnail {
+    width: 58px;
+    height: 58px;
+  }
+
+  .bestseller-name {
+    font-size: 0.92rem;
+  }
+
+  .bestseller-en-name {
+    font-size: 0.68rem;
+    margin-bottom: 4px;
+  }
+
+  .bestseller-meta {
+    gap: 8px;
+  }
+
+  .bestseller-price {
+    font-size: 0.85rem;
+  }
+
+  /* کوچک‌تر کردن دکمه + */
+  .bestseller-add-btn {
+    width: 34px;
+    height: 34px;
+  }
+}

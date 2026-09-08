@@ -1,0 +1,632 @@
+/* ====================================================
+   HERO SECTION - LUXURY UNIFIED STAGE
+   Header sits transparently on top of Hero image
+   Perfume Artwork on the Right
+   Persian Editorial Heading & CTAs on the Left
+   Floating Feature Box Overlapping the Hero Bottom Boundary
+   ==================================================== */
+
+.hero-section {
+  position: relative;
+  min-height: 680px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Crucial: overflow must be visible so floating feature box crosses the bottom boundary */
+  overflow: visible;
+  background-color: #F6F0EC;
+  padding-top: 110px;
+  padding-bottom: 70px;
+  /* Large bottom margin prevents collision with the next section */
+  margin-bottom: 75px;
+}
+
+/* Background Visual Layer: Clipped strictly to the Hero area */
+.hero-bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(201, 143, 145, 0.25);
+}
+
+.hero-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Preserves perfume bottle, crystal ribbon, box, and cherry blossoms on the right */
+  object-position: right center;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Soft luxury veil on the left side to preserve the hero image visibility while ensuring typography legibility */
+.hero-left-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(252, 246, 248, 0.5) 0%,
+    rgba(252, 246, 248, 0.22) 35%,
+    transparent 70%
+  );
+}
+
+/* Hero Content Container */
+.hero-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Hero Content Overlay strictly positioned on the LEFT SIDE in RTL - No background box, revealing the photo */
+.hero-content-left {
+  /* In RTL, margin-right: auto pushes the content to the visual LEFT side */
+  margin-right: auto;
+  margin-left: 0;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: right;
+  direction: rtl;
+  padding: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* Persian Luxury Eyebrow - Frosted rose styling matching the perfume bottle aesthetics */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--primary-burgundy);
+  border: 1px solid rgba(212, 111, 134, 0.45);
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 14px rgba(184, 71, 98, 0.08);
+}
+
+.hero-badge-icon {
+  color: #B84762;
+}
+
+/* Persian Headline Typography - Unified in Estedad font */
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 3.35rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--deep-burgundy);
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  letter-spacing: -0.015em;
+  text-shadow: 0 2px 14px rgba(255, 255, 255, 0.85);
+}
+
+.hero-title-main {
+  font-family: var(--font-heading);
+  font-size: 3.35rem;
+  font-weight: 800;
+  color: #4A1822;
+}
+
+.hero-title-highlight {
+  font-family: var(--font-heading);
+  font-size: 3.35rem;
+  font-weight: 800;
+  color: #962840;
+}
+
+/* Persian Description with Vazirmatn */
+.hero-description {
+  font-family: var(--font-persian);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #382F2F;
+  line-height: 1.9;
+  margin-bottom: 28px;
+  text-shadow: 0 1px 8px rgba(255, 255, 255, 0.85);
+}
+
+/* Real HTML CTA Buttons */
+.hero-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Primary Button: Styled directly after the glowing rose perfume bottle & nectar */
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #D46F86 0%, #B84762 50%, #852238 100%);
+  color: var(--white);
+  padding: 13px 28px;
+  border-radius: var(--radius-pill);
+  font-size: 0.98rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 220, 228, 0.7);
+  cursor: pointer;
+  box-shadow: inset 0 1.5px 2px rgba(255, 255, 255, 0.6), 0 8px 24px rgba(184, 71, 98, 0.35);
+  transition: all var(--transition-smooth);
+  text-shadow: 0 1px 2px rgba(74, 24, 34, 0.4);
+}
+
+.hero-btn-primary:hover {
+  background: linear-gradient(135deg, #DE788F 0%, #C4516D 50%, #942941 100%);
+  transform: translateY(-2px);
+  box-shadow: inset 0 1.5px 3px rgba(255, 255, 255, 0.8), 0 12px 30px rgba(184, 71, 98, 0.45);
+}
+
+.btn-icon-wrapper {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-fast);
+}
+
+.hero-btn-primary:hover .btn-icon-wrapper {
+  transform: translateX(-3px);
+  background: rgba(255, 255, 255, 0.38);
+}
+
+/* Secondary Button: Frosted crystal glass matching the perfume cap & ribbon */
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #6B1D2D;
+  padding: 10px 22px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(212, 111, 134, 0.5);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 4px 16px rgba(184, 71, 98, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+}
+
+.hero-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: #B84762;
+  color: #852238;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(184, 71, 98, 0.2), inset 0 1px 2px rgba(255, 255, 255, 1);
+}
+
+.play-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FDECEF 0%, #F5BAC6 100%);
+  color: #8A263D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(184, 71, 98, 0.18);
+  border: 1.5px solid rgba(212, 111, 134, 0.6);
+  transition: all var(--transition-smooth);
+}
+
+.hero-btn-secondary:hover .play-icon-circle {
+  background: linear-gradient(135deg, #B84762 0%, #852238 100%);
+  color: var(--white);
+  border-color: #852238;
+  transform: scale(1.08);
+}
+
+/* ====================================================
+   FLOATING FEATURE BOX - OVERLAPPING HERO BOUNDARY
+   Centering via left: 0; right: 0; margin-inline: auto (Rock-solid with motion.div)
+   ==================================================== */
+.hero-features-overlap-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: -46px; /* Half inside hero, half below boundary */
+  width: calc(100% - 48px);
+  max-width: 1180px;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.hero-floating-box {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(232, 201, 197, 0.7);
+  box-shadow: 0 16px 36px rgba(122, 38, 54, 0.08), 0 4px 14px rgba(46, 41, 40, 0.03);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  direction: rtl;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.floating-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  padding: 4px 16px;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.floating-item-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: rgba(245, 211, 217, 0.45);
+  color: var(--primary-burgundy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer !important;
+}
+
+.floating-item:hover .floating-item-icon-box {
+  background-color: rgba(245, 211, 217, 0.85);
+  transform: translateY(-2px);
+}
+
+.floating-item-text {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.floating-item-title {
+  font-family: var(--font-heading);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.floating-item-subtitle {
+  font-family: var(--font-persian);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* Subtle vertical divider in RTL */
+.floating-divider {
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background-color: rgba(232, 201, 197, 0.5);
+  pointer-events: none;
+}
+
+/* ====================================================
+   RESPONSIVE BREAKPOINTS
+   On mobile: Image visual is featured cleanly at top,
+   followed by headline and CTAs below with pristine legibility!
+   ==================================================== */
+@media (max-width: 992px) {
+  .hero-section {
+    min-height: 560px;
+    padding-top: 95px;
+    padding-bottom: 75px;
+    margin-bottom: 75px;
+  }
+
+  .hero-bg-image {
+    object-position: 85% center;
+  }
+
+  .hero-content-left {
+    margin-right: auto;
+    margin-left: 0;
+    max-width: 440px;
+    padding: 0 12px;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-title-main,
+  .hero-title-highlight {
+    font-size: 2.5rem;
+  }
+
+  /* 2x2 grid overlapping bottom boundary like desktop */
+  .hero-floating-box {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 16px 20px;
+  }
+
+  .hero-features-overlap-wrapper {
+    position: absolute;
+    bottom: -46px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(100% - 36px);
+    max-width: 720px;
+  }
+
+  .floating-divider {
+    display: none;
+  }
+}
+
+/* Mobile: Side-by-side with perfume on right, text on left, and floating box overlapping bottom exactly like desktop */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 520px;
+    padding-top: 75px;
+    padding-bottom: 65px;
+    margin-bottom: 70px;
+    position: relative;
+    overflow: visible;
+  }
+
+  /* Full-bleed background layer with perfume positioned on the right */
+  .hero-bg-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .hero-bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 88% center;
+  }
+
+  /* Smooth light veil on visual left in RTL for crystal readability */
+  .hero-left-veil {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(250, 243, 244, 0.94) 0%,
+      rgba(250, 243, 244, 0.82) 42%,
+      rgba(250, 243, 244, 0.2) 72%,
+      transparent 90%
+    );
+  }
+
+  .hero-container {
+    position: relative;
+    z-index: 2;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Content strictly positioned on the visual LEFT side (margin-right: auto in RTL) */
+  .hero-content-left {
+    margin-right: auto;
+    margin-left: 0;
+    width: 58%;
+    max-width: 255px;
+    padding: 0;
+    align-items: flex-start;
+    text-align: right;
+  }
+
+  .hero-badge {
+    font-size: 0.74rem;
+    padding: 4px 10px;
+    margin-bottom: 10px;
+    gap: 6px;
+  }
+
+  .hero-badge-icon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .hero-title {
+    font-size: 1.65rem;
+    line-height: 1.26;
+    margin-bottom: 10px;
+  }
+
+  .hero-title-main,
+  .hero-title-highlight {
+    font-size: 1.65rem;
+  }
+
+  .hero-description {
+    font-size: 0.78rem;
+    line-height: 1.65;
+    margin-bottom: 14px;
+    max-width: 220px;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    max-width: 165px;
+  }
+
+  .hero-btn-primary {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-btn-secondary {
+    padding: 6px 12px;
+    font-size: 0.76rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Floating features box overlapping the bottom edge exactly like desktop */
+  .hero-features-overlap-wrapper {
+    position: absolute;
+    bottom: -48px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(100% - 24px);
+    max-width: 520px;
+    z-index: 20;
+    padding: 0;
+  }
+
+  .hero-floating-box {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 12px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(158, 43, 69, 0.08);
+  }
+
+  .floating-item {
+    padding: 2px 0;
+    gap: 8px;
+  }
+
+  .floating-item-icon-box {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+  }
+
+  .floating-item-title {
+    font-size: 0.8rem;
+  }
+
+  .floating-item-subtitle {
+    font-size: 0.68rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-section {
+    min-height: 500px;
+    padding-top: 68px;
+    padding-bottom: 58px;
+    margin-bottom: 68px;
+  }
+
+  .hero-bg-image {
+    object-position: 92% center;
+  }
+
+  .hero-content-left {
+    width: 62%;
+    max-width: 225px;
+  }
+
+  .hero-title,
+  .hero-title-main,
+  .hero-title-highlight {
+    font-size: 1.5rem;
+  }
+
+  .hero-description {
+    font-size: 0.74rem;
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+
+  .hero-cta-group {
+    max-width: 148px;
+    gap: 6px;
+  }
+
+  .hero-btn-primary {
+    padding: 7px 12px;
+    font-size: 0.76rem;
+  }
+
+  .hero-btn-secondary {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+  }
+
+  .hero-features-overlap-wrapper {
+    bottom: -46px;
+    width: calc(100% - 18px);
+  }
+
+  .hero-floating-box {
+    gap: 6px 10px;
+    padding: 10px 12px;
+  }
+
+  .floating-item-icon-box {
+    width: 30px;
+    height: 30px;
+  }
+
+  .floating-item-title {
+    font-size: 0.75rem;
+  }
+
+  .floating-item-subtitle {
+    font-size: 0.64rem;
+  }
+}

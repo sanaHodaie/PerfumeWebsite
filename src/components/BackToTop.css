@@ -1,0 +1,142 @@
+/* BackToTop.css - Delicate Holographic Pearl Styling */
+.back-to-top-hologram {
+  position: fixed;
+  bottom: 32px;
+  left: 28px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 950;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  outline: none;
+  overflow: hidden;
+
+  /* Multi-stop iridescent holographic glass gradient */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(255, 230, 240, 0.88) 25%,
+    rgba(235, 220, 255, 0.82) 50%,
+    rgba(220, 245, 255, 0.78) 75%,
+    rgba(255, 240, 246, 0.95) 100%
+  );
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  /* Delicate holographic glow & soft rose shadow */
+  box-shadow: 
+    0 10px 28px rgba(184, 71, 98, 0.22),
+    0 0 20px rgba(255, 215, 230, 0.55),
+    inset 0 1px 3px rgba(255, 255, 255, 0.95),
+    inset 0 -2px 4px rgba(220, 160, 185, 0.25);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+/* Subtle rainbow prism border ring */
+.hologram-prism-ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  padding: 1.5px;
+  background: linear-gradient(
+    60deg,
+    rgba(255, 182, 193, 0.9),
+    rgba(230, 190, 255, 0.9),
+    rgba(180, 220, 255, 0.85),
+    rgba(255, 218, 185, 0.9),
+    rgba(255, 182, 193, 0.9)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: prismRotate 6s linear infinite;
+}
+
+@keyframes prismRotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* Diagonal holographic glint sweep */
+.hologram-light-glint {
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: linear-gradient(
+    45deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.6) 48%,
+    rgba(255, 225, 240, 0.8) 52%,
+    transparent 65%
+  );
+  pointer-events: none;
+  animation: holoGlint 4s ease-in-out infinite;
+}
+
+@keyframes holoGlint {
+  0%, 15% {
+    transform: translateY(-80%) rotate(25deg);
+    opacity: 0;
+  }
+  35%, 65% {
+    opacity: 0.85;
+  }
+  85%, 100% {
+    transform: translateY(80%) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* Icon container */
+.hologram-icon-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-burgundy);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.hologram-arrow-icon {
+  filter: drop-shadow(0 1px 3px rgba(142, 35, 59, 0.25));
+}
+
+.back-to-top-hologram:hover {
+  box-shadow: 
+    0 14px 34px rgba(184, 71, 98, 0.32),
+    0 0 28px rgba(255, 200, 225, 0.75),
+    inset 0 1px 4px rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+.back-to-top-hologram:hover .hologram-icon-wrap {
+  transform: translateY(-2px);
+  color: #6C152B;
+}
+
+/* Mobile responsive positioning */
+@media (max-width: 860px) {
+  .back-to-top-hologram {
+    bottom: 84px; /* Placed gently above the mobile bottom dock */
+    left: 16px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .hologram-arrow-icon {
+    width: 18px;
+    height: 18px;
+  }
+}

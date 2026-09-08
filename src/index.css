@@ -1,0 +1,258 @@
+/* ====================================================
+   ANTI LUXURY PERFUMERY - GLOBAL DESIGN SYSTEM
+   Color Palette & Base Styles (Pure CSS)
+   ==================================================== */
+
+/* Self-hosted Persian and Luxury Fonts */
+@import "@fontsource/vazirmatn/300.css";
+@import "@fontsource/vazirmatn/400.css";
+@import "@fontsource/vazirmatn/500.css";
+@import "@fontsource/vazirmatn/600.css";
+@import "@fontsource/vazirmatn/700.css";
+@import "@fontsource/vazirmatn/800.css";
+
+@import "@fontsource/estedad/400.css";
+@import "@fontsource/estedad/500.css";
+@import "@fontsource/estedad/600.css";
+@import "@fontsource/estedad/700.css";
+@import "@fontsource/estedad/800.css";
+@import "@fontsource/estedad/900.css";
+
+@import "@fontsource/amiri/400.css";
+@import "@fontsource/amiri/700.css";
+
+:root {
+  /* Brand Color Palette - Calming, Soothing Soft Pink & Velvety Rose Harmony */
+  --bg-main: #FCF6F8;
+  --bg-secondary: #F8EBEF;
+  --bg-card: #FFFFFF;
+  --soft-blush: #F8D8E0;
+  --light-pink: #FDF2F5;
+  --dusty-rose: #C6687F;
+  --rose-accent: #DA7990;
+  --rose-glow: rgba(248, 216, 224, 0.7);
+  --primary-burgundy: #8E233B;
+  --deep-burgundy: #521523;
+  --burgundy-hover: #751A2E;
+  --text-dark: #2E2024;
+  --text-muted: #6E565B;
+  --text-subtle: #9E838A;
+  --white: #FFFFFF;
+
+  /* Typography */
+  --font-persian: 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Estedad', 'Vazirmatn', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Amiri', 'Playfair Display', Georgia, serif;
+  --font-display: 'Cinzel', 'Playfair Display', Didot, serif;
+
+  /* Radius & Shadows */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  --shadow-subtle: 0 4px 20px rgba(163, 52, 77, 0.04);
+  --shadow-soft: 0 10px 30px rgba(163, 52, 77, 0.07);
+  --shadow-elevated: 0 18px 40px rgba(163, 52, 77, 0.12);
+  --shadow-glow: 0 0 35px rgba(248, 216, 224, 0.65);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  direction: ltr; /* Keeps browser window scrollbar on the RIGHT */
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-persian);
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+  direction: rtl; /* All website content, layout, menus and text are pure RTL */
+  text-align: right;
+  line-height: 1.8;
+  letter-spacing: normal;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root, .anti-app-root {
+  direction: rtl;
+  text-align: right;
+  width: 100%;
+}
+
+/* Safe padding on mobile for the bottom navigation dock */
+@media (max-width: 860px) {
+  body {
+    padding-bottom: 78px;
+  }
+}
+
+/* Headings with Estedad */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-dark);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+/* Luxury Serif Titles */
+.luxury-title, .font-serif-luxury {
+  font-family: var(--font-serif);
+  letter-spacing: 0.01em;
+}
+
+/* Links & Buttons */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+button {
+  font-family: var(--font-persian);
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Layout Utilities */
+.app-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+/* Pill Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 13px 30px;
+  background-color: var(--primary-burgundy);
+  color: var(--white);
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 6px 18px rgba(122, 38, 54, 0.22);
+  transition: all var(--transition-smooth);
+}
+
+.btn-primary:hover {
+  background-color: var(--deep-burgundy);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(122, 38, 54, 0.32);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background-color: transparent;
+  color: var(--text-dark);
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all var(--transition-smooth);
+}
+
+.btn-secondary:hover {
+  color: var(--primary-burgundy);
+  background-color: rgba(232, 201, 197, 0.25);
+}
+
+.btn-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--white);
+  color: var(--text-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-subtle);
+  transition: all var(--transition-smooth);
+}
+
+.btn-icon-circle:hover {
+  background-color: var(--primary-burgundy);
+  color: var(--white);
+  transform: scale(1.05);
+}
+
+/* Subtle Floating Animation */
+@keyframes softFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(0.5deg);
+  }
+}
+
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #F5CAD3 0%, var(--dusty-rose) 100%);
+  border-radius: 9999px;
+  border: 2px solid var(--bg-main);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-burgundy);
+}

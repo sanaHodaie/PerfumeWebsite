@@ -1,0 +1,6 @@
+{
+  "name": "آنتی | عطر لوکس",
+  "description": "فروشگاه آنلاین عطرهای نیش و لوکس آنتی، تجسم ظرافت، هنر و ماندگاری جاودانه",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
