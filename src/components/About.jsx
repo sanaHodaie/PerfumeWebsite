@@ -4,9 +4,9 @@ import { ArrowLeft, Plus, Sparkles } from 'lucide-react';
 import { ABOUT_DATA } from '../data/products';
 import './About.css';
 
-import smellperfumebywoman from '../assets/images/Gemini_Generated_Image_qa10ieqa10ieqa10.jpg';
-import petal from '../assets/images/bb2fa5eb5e24af10940b68626e0cd4d1.jpg';
-import tallBottle from '../assets/images/baf9ab4b9adfd3ab70ba23265ccf29b8.jpg';
+import smellperfumebywoman from '../assets/images/Gemini_Generated_Image_qa10ieqa10ieqa10-tinypng.io.webp';
+import petal from '../assets/images/bb2fa5eb5e24af10940b68626e0cd4d1-tinypng.io.webp';
+import tallBottle from '../assets/images/baf9ab4b9adfd3ab70ba23265ccf29b8-tinypng.io.webp';
 
 export default function About({ onDiscoverClick }) {
   return (

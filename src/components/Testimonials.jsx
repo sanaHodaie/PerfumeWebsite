@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Star, Truck, ShieldCheck, RotateCcw, CheckCircle2 } from 'lucide-react';
 import { TESTIMONIAL, TRUST_BADGES } from '../data/products';
 import './Testimonials.css';
-import ourCustomerperfume from '../assets/images/a2c0707ffc06859ef6cff9752df4dba9.jpg';
+import ourCustomerperfume from '../assets/images/a2c0707ffc06859ef6cff9752df4dba9-tinypng.io.webp';
 
 const TRUST_ICON_MAP = {
   Truck: Truck,

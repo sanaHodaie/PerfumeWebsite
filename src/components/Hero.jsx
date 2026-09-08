@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Play, Sparkles, Clock, Palette, Package } from 'lucide-react';
 import { HERO_DATA, FEATURES } from '../data/products';
-import heroPosterImg from '../assets/images/Gemini_Generated_Image_fifj8afifj8afifj.jpg';
+import heroPosterImg from '../assets/images/Gemini_Generated_Image_fifj8afifj8afifj-tinypng.io.webp';
 import './Hero.css';
 
 const FEATURE_ICONS = {

@@ -3,9 +3,9 @@
  * تصاویر هماهنگ با پالت رنگی کرم، رز گچی، صورتی شکوفه‌ای و عنابی
  */
 
-import promoBanner1Image from '../assets/images/Gemini_Generated_Image_74dcnr74dcnr74dc.jpg';
-import promoMobileImage from '../assets/images/your-mobile-banner.jpg';
-import seondPoster from '../assets/images/8745f468126aba97f8b83b297ef12fa9.jpg';
+import promoBanner1Image from '../assets/images/Gemini_Generated_Image_b3ymqdb3ymqdb3ym-tinypng.io.webp';
+import promoMobileImage from '../assets/images/your-mobile-banner-tinypng.io.webp';
+import seondPoster from '../assets/images/8745f468126aba97f8b83b297ef12fa9-tinypng.io.webp';
 import BaccaratRouge from '../assets/images/Gemini_Generated_Image_3zhxik3zhxik3zhx-tinypng.io.webp';
 import Dioradore from '../assets/images/Gemini_Generated_Image_jbv2iwjbv2iwjbv2-tinypng.io.webp';
 import TomFordBlackOrchid from '../assets/images/Gemini_Generated_Image_84d89q84d89q84d8-tinypng.io.webp';
