@@ -3,7 +3,7 @@
 .bestsellers-section {
   padding: 60px 0 80px;
   background-color: var(--bg-main);
-  overflow: hidden; /* جلوگیری از اسکرول افقی اضافی */
+  overflow: hidden;
 }
 
 .bestsellers-layout {
@@ -60,7 +60,6 @@
   transform: translateX(-3px);
 }
 
-/* Compact Vertical List */
 .bestsellers-compact-list {
   display: flex;
   flex-direction: column;
@@ -90,7 +89,6 @@
   border-color: var(--dusty-rose);
 }
 
-/* رتبه به فونت فارسی */
 .bestseller-rank {
   font-size: 1.15rem;
   font-weight: 800;
@@ -129,7 +127,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* جلوگیری از سرریز متن */
+  min-width: 0;
 }
 
 .bestseller-name {
@@ -297,7 +295,7 @@
 }
 
 /* ====================================================
-   Responsive - تنظیمات ریسپانسیو برای حل مشکل موبایل
+   Responsive & Modal Fixes (اصلاح کامل مودال در موبایل)
    ==================================================== */
 @media (max-width: 992px) {
   .bestsellers-layout {
@@ -311,43 +309,113 @@
     padding: 40px 0 60px;
   }
 
-  /* تنظیم پدینگ و گپ کارت‌ها در موبایل */
   .bestseller-item-card {
-    padding: 10px 12px; /* کم کردن پدینگ داخلی */
-    gap: 10px; /* کم کردن فاصله المان‌ها */
+    padding: 10px 12px;
+    gap: 8px;
   }
 
   .bestseller-rank {
-    min-width: 18px;
-    font-size: 1rem;
+    min-width: 16px;
+    font-size: 0.95rem;
   }
 
-  /* کوچک‌تر کردن عکس محصول در موبایل */
   .bestseller-thumbnail {
-    width: 58px;
-    height: 58px;
+    width: 54px;
+    height: 54px;
   }
 
   .bestseller-name {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
   }
 
   .bestseller-en-name {
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     margin-bottom: 4px;
   }
 
   .bestseller-meta {
-    gap: 8px;
+    gap: 6px;
   }
 
   .bestseller-price {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
 
-  /* کوچک‌تر کردن دکمه + */
   .bestseller-add-btn {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
+  }
+
+  /* ۱. تنظیم بک‌دراپ مودال برای قرارگیری بالای منوی پایین */
+  div[class*="modal-overlay"],
+  div[class*="modal-backdrop"],
+  .quickview-modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    padding: 20px 12px 85px 12px !important; /* ۸۵ پیکسل فاصله از پایین برای نرفتن زیر منو */
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ۲. ساختار اصلی کادر مودال و فعال‌سازی اسکرول روان */
+  div[class*="modal-content"],
+  div[class*="modal-container"],
+  div[class*="modal-card"],
+  .quickview-modal-content {
+    width: 100% !important;
+    max-height: calc(100dvh - 120px) !important;
+    border-radius: 24px !important;
+    background-color: #ffffff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important; /* جهت حفظ گوشه‌های گرد ۲۴پیکسلی */
+    position: relative !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  /* ۳. اجبار بخش داخلی مودال به اسکرول‌خوردن عمودی */
+  div[class*="modal-content"] > div,
+  div[class*="modal-body"],
+  .quickview-modal-content > div:not([class*="footer"]):not([class*="action"]) {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-height: 100% !important;
+  }
+
+  /* تنظیم اسکرول‌بار ظریف */
+  div[class*="modal-content"] ::-webkit-scrollbar {
+    width: 4px !important;
+  }
+  div[class*="modal-content"] ::-webkit-scrollbar-thumb {
+    background-color: rgba(122, 38, 54, 0.2) !important;
+    border-radius: 4px !important;
+  }
+
+  /* ۴. عکس داخل مودال */
+  div[class*="modal-content"] img {
+    max-height: 160px !important;
+    object-fit: contain !important;
+  }
+
+  /* ۵. یک‌خطی کردن دکمه افزودن به سبد و قیمت در پایین مودال */
+  div[class*="modal-content"] div[class*="footer"],
+  div[class*="modal-content"] div[class*="action"],
+  div[class*="modal-content"] button[class*="add"] {
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+  }
+
+  div[class*="modal-content"] button[class*="add"] {
+    padding: 8px 16px !important;
+    font-size: 0.82rem !important;
+    height: 42px !important;
+    border-radius: 21px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
   }
 }

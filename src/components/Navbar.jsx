@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, Home, Sparkles, HelpCircle } from 'lucide-react';
+import { Search, ShoppingBag, Home, Sparkles, HelpCircle, User, BookOpen, Flower2 } from 'lucide-react';
 import './Navbar.css';
 
-export default function Navbar({ cartCount, onOpenCart, onOpenSearch }) {
+export default function Navbar({
+  cartCount,
+  onOpenCart,
+  onOpenSearch,
+  onOpenAuth,
+  currentUser,
+  onOpenPhilosophy,
+  onOpenGrasse,
+}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
 
@@ -10,18 +18,39 @@ export default function Navbar({ cartCount, onOpenCart, onOpenSearch }) {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 25);
 
-      // Detect active section for dock indicator
-      const scrollPos = window.scrollY + 200;
-      const sections = ['faq', 'about', 'collection', 'hero'];
-      for (const sec of sections) {
-        const el = document.getElementById(sec);
-        if (el && scrollPos >= el.offsetTop) {
-          setActiveSection(sec);
-          break;
+      // Bottom of page check
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+        setActiveSection('footer');
+        return;
+      }
+
+      // Check sections from top to bottom
+      const checkOffset = 180;
+      const sectionOrder = ['hero', 'about', 'collection', 'bestsellers', 'testimonials', 'faq', 'newsletter', 'footer'];
+
+      let current = 'hero';
+      for (const id of sectionOrder) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= checkOffset && rect.bottom > checkOffset) {
+            // Group product-related sections under 'collection'
+            if (id === 'bestsellers') {
+              current = 'collection';
+            } else if (id === 'testimonials') {
+              current = 'faq';
+            } else {
+              current = id;
+            }
+            break;
+          }
         }
       }
+      setActiveSection(current);
     };
-    window.addEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -38,7 +67,7 @@ export default function Navbar({ cartCount, onOpenCart, onOpenSearch }) {
             <span className="brand-badge-script">PARFUM</span>
           </div>
 
-          {/* Desktop Center Navigation Links */}
+          {/* Desktop Center Navigation Links: خانه، محصولات، درباره ما، مجله، سوالات متداول، تماس با ما */}
           <nav className="navbar-nav desktop-nav">
             <a
               href="#hero"
@@ -58,7 +87,10 @@ export default function Navbar({ cartCount, onOpenCart, onOpenSearch }) {
             >
               درباره ما
             </a>
-            <a href="#newsletter" className="nav-link">
+            <a
+              href="#newsletter"
+              className={`nav-link ${activeSection === 'newsletter' ? 'active' : ''}`}
+            >
               مجله
             </a>
             <a
@@ -67,12 +99,15 @@ export default function Navbar({ cartCount, onOpenCart, onOpenSearch }) {
             >
               سوالات متداول
             </a>
-            <a href="#footer" className="nav-link">
+            <a
+              href="#footer"
+              className={`nav-link ${activeSection === 'footer' ? 'active' : ''}`}
+            >
               تماس با ما
             </a>
           </nav>
 
-          {/* Desktop & Top Actions: Search & Cart Button */}
+          {/* Desktop & Top Actions: Search, User Account & Cart Button */}
           <div className="navbar-actions">
             <button
               type="button"
@@ -84,6 +119,22 @@ export default function Navbar({ cartCount, onOpenCart, onOpenSearch }) {
               <span className="search-text">جستجو...</span>
             </button>
 
+            {/* Account / Login Button beside Cart */}
+            <button
+              type="button"
+              className={`user-circle-btn ${currentUser ? 'user-logged-in' : ''}`}
+              onClick={onOpenAuth}
+              aria-label={currentUser ? 'پروفایل کاربری' : 'ورود به حساب کاربری'}
+              title={currentUser ? `حساب کاربری: ${currentUser.name || 'کاربر'}` : 'ورود / ثبت‌نام در باشگاه آنتی'}
+            >
+              <User size={18} strokeWidth={2} />
+              {currentUser && (
+                <span className="user-btn-name">{currentUser.name || 'کاربر'}</span>
+              )}
+              {currentUser && <span className="user-vip-dot" />}
+            </button>
+
+            {/* Cart Button */}
             <button
               type="button"
               className="cart-circle-btn"
@@ -118,19 +169,19 @@ export default function Navbar({ cartCount, onOpenCart, onOpenSearch }) {
         <button
           type="button"
           className="bottom-dock-item"
-          onClick={onOpenSearch}
-          aria-label="جستجو در محصولات"
+          onClick={onOpenAuth}
+          aria-label="حساب کاربری"
         >
-          <Search size={20} strokeWidth={2} />
-          <span>جستجو</span>
+          <User size={20} strokeWidth={2} />
+          <span>{currentUser ? (currentUser.name || 'کاربر') : 'ورود'}</span>
         </button>
 
         <a
-          href="#faq"
-          className={`bottom-dock-item ${activeSection === 'faq' ? 'active' : ''}`}
+          href="#about"
+          className={`bottom-dock-item ${activeSection === 'about' ? 'active' : ''}`}
         >
-          <HelpCircle size={20} strokeWidth={2} />
-          <span>سوالات</span>
+          <BookOpen size={20} strokeWidth={2} />
+          <span>درباره ما</span>
         </a>
 
         <button

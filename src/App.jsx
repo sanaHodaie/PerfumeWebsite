@@ -14,6 +14,8 @@ import CartDrawer from './components/CartDrawer';
 import QuickViewModal from './components/QuickViewModal';
 import StoryModal from './components/StoryModal';
 import SearchModal from './components/SearchModal';
+
+import AuthModal from './components/AuthModal';
 import Toast from './components/Toast';
 import BackToTop from './components/BackToTop';
 
@@ -34,12 +36,18 @@ export default function App() {
     },
   ]);
 
+  // User Account State
+  const [currentUser, setCurrentUser] = useState(null);
+
   // Modal States
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isStoryOpen, setIsStoryOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isPhilosophyOpen, setIsPhilosophyOpen] = useState(false);
+  const [isGrasseOpen, setIsGrasseOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
-  const [toastMessage, setToastMessage] = useState('');
+  const [toastData, setToastData] = useState(null);
 
   // Cart Handlers
   const handleAddToCart = (product) => {
@@ -52,7 +60,10 @@ export default function App() {
       }
       return [...prev, { ...product, quantity: 1 }];
     });
-    setToastMessage(`عطر «${product.name}» به سبد خرید افزوده شد`);
+    setToastData({
+      message: `عطر «${product.name}» به سبد خرید افزوده شد`,
+      position: 'bottom',
+    });
   };
 
   const handleUpdateQuantity = (id, newQty) => {
@@ -71,7 +82,10 @@ export default function App() {
 
   const handleCheckout = () => {
     setIsCartOpen(false);
-    setToastMessage('در حال اتصال به درگاه پرداخت امن...');
+    setToastData({
+      message: 'در حال اتصال به درگاه پرداخت امن بانکی...',
+      position: 'bottom',
+    });
   };
 
   const scrollToCollection = () => {
@@ -86,6 +100,10 @@ export default function App() {
         cartCount={cart.reduce((total, item) => total + item.quantity, 0)}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        currentUser={currentUser}
+        onOpenPhilosophy={() => setIsPhilosophyOpen(true)}
+        onOpenGrasse={() => setIsGrasseOpen(true)}
       />
 
       <main>
@@ -97,7 +115,7 @@ export default function App() {
 
         {/* Brand Philosophy & Asymmetric Collage */}
         <About
-          onDiscoverClick={() => setIsStoryOpen(true)}
+          onDiscoverClick={() => setIsPhilosophyOpen(true)}
         />
 
         {/* 5-Product Collection Grid */}
@@ -136,7 +154,10 @@ export default function App() {
       </main>
 
       {/* Minimal Luxury Footer */}
-      <Footer />
+      <Footer
+        onOpenPhilosophy={() => setIsPhilosophyOpen(true)}
+        onOpenGrasse={() => setIsGrasseOpen(true)}
+      />
 
       {/* Modals & Drawers */}
       <CartDrawer
@@ -159,6 +180,49 @@ export default function App() {
         onClose={() => setIsStoryOpen(false)}
       />
 
+
+
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        currentUser={currentUser}
+        onLogin={(user) => {
+          setCurrentUser(user);
+          setIsAuthOpen(false);
+          setToastData({
+            message: `ورود با موفقیت انجام شد. خوش آمدید، ${user.name} عزیز!`,
+            title: 'ورود موفقیت‌آمیز',
+            position: 'center',
+          });
+        }}
+        onUpdateUser={(updatedUser) => {
+          setCurrentUser(updatedUser);
+          setToastData({
+            message: `نام شما با موفقیت به «${updatedUser.name}» تغییر یافت.`,
+            title: 'بروزرسانی مشخصات کاربری',
+            position: 'center',
+          });
+        }}
+        onLogout={() => {
+          setCurrentUser(null);
+          setIsAuthOpen(false);
+          setToastData({
+            message: 'شما با موفقیت از حساب کاربری خود خارج شدید. به امید دیدار مجدد در خانه عطر آنتی.',
+            title: 'خروج از حساب کاربری',
+            position: 'center',
+            type: 'logout',
+          });
+        }}
+        cart={cart}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        onOpenCart={() => {
+          setIsAuthOpen(false);
+          setIsCartOpen(true);
+        }}
+        onExploreCollection={scrollToCollection}
+      />
+
       <SearchModal
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
@@ -167,8 +231,8 @@ export default function App() {
 
       {/* Toast Notification */}
       <Toast
-        message={toastMessage}
-        onClose={() => setToastMessage('')}
+        toast={toastData}
+        onClose={() => setToastData(null)}
       />
 
       {/* Holographic Back to Top Button */}

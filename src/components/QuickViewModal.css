@@ -2,10 +2,10 @@
 .quickview-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(46, 41, 40, 0.55);
+  background-color: rgba(46, 41, 40, 0.65);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  z-index: 250;
+  z-index: 999999; /* قرارگیری بالاتر از تمام عناصر و منوهای پایین */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,6 +28,8 @@
   border: 1px solid rgba(232, 201, 197, 0.5);
   position: relative;
   animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes modalScaleUp {
@@ -49,6 +51,8 @@
   justify-content: center;
   z-index: 10;
   transition: all var(--transition-fast);
+  border: none;
+  cursor: pointer;
 }
 
 .quickview-close-btn:hover {
@@ -59,6 +63,8 @@
 .quickview-grid {
   display: grid;
   grid-template-columns: 1fr 1.3fr;
+  width: 100%;
+  height: 100%;
 }
 
 /* Visual */
@@ -72,7 +78,6 @@
   position: relative;
 }
 
-/* Rounded photo frame without cut-in, pure elegant rounded corners */
 .quickview-img-frame {
   position: relative;
   width: 100%;
@@ -121,6 +126,8 @@
   padding: 36px 40px;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .quickview-cat {
@@ -214,11 +221,13 @@
   margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid rgba(232, 201, 197, 0.4);
+  gap: 12px;
 }
 
 .quickview-price-tag {
   display: flex;
   flex-direction: column;
+  white-space: nowrap;
 }
 
 .price-label {
@@ -235,35 +244,89 @@
 .quickview-add-btn {
   padding: 12px 24px;
   font-size: 0.92rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
+/* ====================================================
+   اصلاحات موبایل (Mobile Bottom Sheet Mode)
+   ==================================================== */
 @media (max-width: 768px) {
+  .quickview-backdrop {
+    padding: 0;
+    align-items: flex-end; /* چسبیدن مودال به انتهای صفحه */
+  }
+
+  .quickview-modal {
+    max-height: 85vh; /* محدود کردن ارتفاع مودال به ۸۵٪ صفحه */
+    border-radius: 28px 28px 0 0; /* حالت Bottom Sheet استاندارد */
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+  }
+
   .quickview-grid {
     grid-template-columns: 1fr;
+    overflow-y: auto; /* فعال‌سازی اسکرول روان عمودی */
+    -webkit-overflow-scrolling: touch;
+    max-height: 85vh;
   }
 
   .quickview-visual {
-    padding: 24px 16px 20px;
+    padding: 20px 16px 12px;
     height: auto;
+    flex-shrink: 0;
   }
 
   .quickview-img-frame {
-    height: 250px;
-    border-radius: 20px;
-    max-width: 250px;
+    height: 160px; /* کوچک‌تر کردن عکس تا متن‌ها دیده شوند */
+    max-width: 160px;
+    border-radius: 18px;
   }
 
   .quickview-badge {
-    margin-top: 14px;
-    padding: 5px 12px;
-    font-size: 0.72rem;
+    margin-top: 10px;
+    padding: 4px 12px;
+    font-size: 0.7rem;
   }
 
   .quickview-details {
-    padding: 24px 20px;
+    padding: 16px 20px 24px 20px;
+    height: auto;
   }
 
   .quickview-title {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
+  }
+
+  .quickview-description {
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+  }
+
+  .scent-pyramid-box {
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+
+  .quickview-action-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--white);
+    padding: 12px 0 8px 0;
+    z-index: 5;
+    border-top: 1px solid rgba(232, 201, 197, 0.6);
+  }
+
+  .price-val {
+    font-size: 1.05rem;
+  }
+
+  .quickview-add-btn {
+    padding: 10px 16px;
+    font-size: 0.82rem;
   }
 }
