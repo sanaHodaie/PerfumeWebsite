@@ -3,6 +3,9 @@ import { motion } from 'motion/react';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import './Newsletter.css';
 
+import yslperfume from '../assets/images/9cdfe2da998bb2de63bab6503c92933a-tinypng.io.webp';
+
+
 export default function Newsletter({ onSubscribeSuccess }) {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
