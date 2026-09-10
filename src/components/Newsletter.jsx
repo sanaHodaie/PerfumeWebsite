@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import './Newsletter.css';
 
-import yslperfume from '../assets/images/9cdfe2da998bb2de63bab6503c92933a-tinypng.io.webp';
+import yslperfume from '../assets/images/9cdfe2da998bb2de63bab6503c92933a-tinypng.io.jpg';
 
 
 export default function Newsletter({ onSubscribeSuccess }) {
@@ -80,7 +80,7 @@ export default function Newsletter({ onSubscribeSuccess }) {
             transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <img
-              src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=700&q=80"
+              src={yslperfume}
               alt="عطر لوکس آنتی در بسته‌بندی گل سرخ"
               className="newsletter-img"
               loading="lazy"

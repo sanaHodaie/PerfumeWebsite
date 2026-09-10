@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Sparkles, Check } from 'lucide-react';
 import './StoryModal.css';
+import perfumepic from '../assets/images/1118159413752460073-tinypng.io.webp';
 
 export default function StoryModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -15,7 +16,7 @@ export default function StoryModal({ isOpen, onClose }) {
         <div className="story-content-wrapper">
           <div className="story-video-sim">
             <img
-              src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=1000&q=85"
+              src={perfumepic}
               alt="داستان رایحه لوکس آنتی"
               className="story-backdrop-img"
             />

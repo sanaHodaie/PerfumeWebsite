@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUp } from 'lucide-react';
 import './BackToTop.css';
 
-export default function BackToTop() {
+export default function BackToTop({ isModalOpen = false }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function BackToTop() {
 
   return (
     <AnimatePresence>
-      {isVisible && (
+      {isVisible && !isModalOpen && (
         <motion.button
           type="button"
           id="back-to-top-btn"

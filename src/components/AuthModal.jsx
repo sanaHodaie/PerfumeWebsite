@@ -418,7 +418,7 @@ export default function AuthModal({
                           value={phoneOrEmail}
                           onChange={(e) => setPhoneOrEmail(e.target.value)}
                           required
-                          dir="ltr"
+                          dir="rtl"
                         />
                       </div>
                     </div>
@@ -521,7 +521,7 @@ export default function AuthModal({
                           value={phoneOrEmail}
                           onChange={(e) => setPhoneOrEmail(e.target.value)}
                           required
-                          dir="ltr"
+                          dir="rtl"
                         />
                       </div>
                     </div>
@@ -537,7 +537,7 @@ export default function AuthModal({
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required
-                          dir="ltr"
+                          dir="rtl"
                         />
                         <button
                           type="button"
@@ -570,4 +570,3 @@ export default function AuthModal({
     </AnimatePresence>
   );
 }
-

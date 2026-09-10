@@ -14,7 +14,11 @@ import CartDrawer from './components/CartDrawer';
 import QuickViewModal from './components/QuickViewModal';
 import StoryModal from './components/StoryModal';
 import SearchModal from './components/SearchModal';
-
+import PhilosophyModal from './components/PhilosophyModal';
+import GrasseFarmsModal from './components/GrasseFarmsModal';
+import EcoResponsibilityModal from './components/EcoResponsibilityModal';
+import CareerOpportunitiesModal from './components/CareerOpportunitiesModal';
+import HandmadeGlassModal from './components/HandmadeGlassModal';
 import AuthModal from './components/AuthModal';
 import Toast from './components/Toast';
 import BackToTop from './components/BackToTop';
@@ -45,9 +49,26 @@ export default function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isPhilosophyOpen, setIsPhilosophyOpen] = useState(false);
   const [isGrasseOpen, setIsGrasseOpen] = useState(false);
+  const [isEcoOpen, setIsEcoOpen] = useState(false);
+  const [isCareerOpen, setIsCareerOpen] = useState(false);
+  const [isGlasscraftOpen, setIsGlasscraftOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [toastData, setToastData] = useState(null);
+
+  // Check if any modal or drawer is active to hide BackToTop button
+  const isAnyModalOpen = Boolean(
+    isPhilosophyOpen ||
+    isGrasseOpen ||
+    isEcoOpen ||
+    isCareerOpen ||
+    isGlasscraftOpen ||
+    isAuthOpen ||
+    isCartOpen ||
+    isStoryOpen ||
+    isSearchOpen ||
+    quickViewProduct
+  );
 
   // Cart Handlers
   const handleAddToCart = (product) => {
@@ -148,7 +169,10 @@ export default function App() {
         {/* Newsletter Subscription */}
         <Newsletter
           onSubscribeSuccess={(email) => {
-            setToastMessage(`ایمیل شما با موفقیت ثبت شد: ${email}`);
+            setToastData({
+              message: `ایمیل شما با موفقیت ثبت شد: ${email}`,
+              position: 'bottom',
+            });
           }}
         />
       </main>
@@ -157,6 +181,9 @@ export default function App() {
       <Footer
         onOpenPhilosophy={() => setIsPhilosophyOpen(true)}
         onOpenGrasse={() => setIsGrasseOpen(true)}
+        onOpenGlasscraft={() => setIsGlasscraftOpen(true)}
+        onOpenEco={() => setIsEcoOpen(true)}
+        onOpenCareer={() => setIsCareerOpen(true)}
       />
 
       {/* Modals & Drawers */}
@@ -180,7 +207,34 @@ export default function App() {
         onClose={() => setIsStoryOpen(false)}
       />
 
+      <PhilosophyModal
+        isOpen={isPhilosophyOpen}
+        onClose={() => setIsPhilosophyOpen(false)}
+        onExploreCollection={scrollToCollection}
+      />
 
+      <GrasseFarmsModal
+        isOpen={isGrasseOpen}
+        onClose={() => setIsGrasseOpen(false)}
+        onExploreCollection={scrollToCollection}
+      />
+
+      <EcoResponsibilityModal
+        isOpen={isEcoOpen}
+        onClose={() => setIsEcoOpen(false)}
+        onExploreCollection={scrollToCollection}
+      />
+
+      <CareerOpportunitiesModal
+        isOpen={isCareerOpen}
+        onClose={() => setIsCareerOpen(false)}
+      />
+
+      <HandmadeGlassModal
+        isOpen={isGlasscraftOpen}
+        onClose={() => setIsGlasscraftOpen(false)}
+        onExploreCollection={scrollToCollection}
+      />
 
       <AuthModal
         isOpen={isAuthOpen}
@@ -236,7 +290,7 @@ export default function App() {
       />
 
       {/* Holographic Back to Top Button */}
-      <BackToTop />
+      <BackToTop isModalOpen={isAnyModalOpen} />
     </div>
   );
 }

@@ -83,13 +83,202 @@
   box-shadow: 0 6px 18px rgba(142, 35, 59, 0.22);
 }
 
-/* 5 Columns Layout matching Reference */
-.products-grid-5 {
+/* 5 Columns Layout */
+.products-grid-5 {  
+  position: relative;
+  z-index: 1; 
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
+/* Collection Toolbar Styling */
+.collection-toolbar {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(224, 134, 154, 0.25);
+  backdrop-filter: blur(8px);
+}
+
+.category-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  border: 1px solid rgba(224, 134, 154, 0.3);
+  color: var(--primary-burgundy);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+}
+
+.pill-btn:hover,
+.pill-btn.active {
+  background: linear-gradient(135deg, var(--burgundy-hover), var(--primary-burgundy));
+  color: var(--white);
+  border-color: var(--primary-burgundy);
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  padding: 7px 34px 7px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(224, 134, 154, 0.35);
+  font-size: 0.82rem;
+  outline: none;
+  width: 220px;
+  transition: all var(--transition-smooth);
+}
+
+.search-box input:focus {
+  width: 260px;
+  border-color: var(--primary-burgundy);
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  color: var(--dusty-rose);
+}
+
+/* Custom Dropdown Container */
+.custom-dropdown-container {
+  position: relative;
+  z-index: 60;
+  user-select: none;
+}
+
+/* Dropdown Trigger Button */
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(224, 134, 154, 0.35);
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--primary-burgundy);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(163, 52, 77, 0.04);
+  transition: all var(--transition-smooth);
+}
+
+.dropdown-trigger:hover,
+.dropdown-trigger.open {
+  border-color: var(--primary-burgundy);
+  box-shadow: 0 4px 14px rgba(163, 52, 77, 0.12);
+}
+
+.dropdown-trigger-icon {
+  color: var(--primary-burgundy);
+}
+
+.dropdown-selected-text {
+  white-space: nowrap;
+}
+
+.dropdown-chevron {
+  color: var(--dusty-rose);
+  transition: transform 0.25s ease;
+}
+
+.dropdown-chevron.rotate {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Floating Menu */
+.dropdown-menu {
+position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 170px;
+  background: #ffffff;
+  border: 1px solid rgba(224, 134, 154, 0.3);
+  border-radius: 14px;
+  padding: 6px;
+  list-style: none;
+  margin: 0;
+  box-shadow: 0 10px 25px rgba(74, 18, 30, 0.15);
+  z-index: 999; 
+  backdrop-filter: blur(10px);
+}
+
+/* Menu Items */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--primary-burgundy);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background: rgba(248, 216, 224, 0.35);
+  color: var(--burgundy-hover);
+}
+
+.dropdown-item.selected {
+  background: rgba(126, 30, 53, 0.08);
+  color: var(--primary-burgundy);
+  font-weight: 700;
+}
+
+.check-icon {
+  color: var(--primary-burgundy);
+}
+
+/* Empty State */
+.no-products-found {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--dusty-rose);
+}
+
+.reset-filter-btn {
+  margin-top: 12px;
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--primary-burgundy);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Media Queries */
 @media (max-width: 1200px) {
   .products-grid-5 {
     grid-template-columns: repeat(3, 1fr);
@@ -109,6 +298,27 @@
 
   .section-title {
     font-size: 1.85rem;
+  }
+
+  .collection-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search-box input,
+  .search-box input:focus,
+  .custom-dropdown-container,
+  .dropdown-trigger {
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    width: 100%;
   }
 }
 

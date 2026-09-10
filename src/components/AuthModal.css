@@ -194,6 +194,7 @@
   right: 14px;
   color: var(--dusty-rose);
   pointer-events: none;
+  z-index: 2;
 }
 
 .input-with-icon input {
@@ -206,6 +207,8 @@
   color: var(--text-dark);
   outline: none;
   transition: all var(--transition-fast);
+  position: relative;
+  z-index: 1;
 }
 
 .input-with-icon input:focus {
@@ -224,6 +227,8 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
+  z-index: 2;
+  transition: color var(--transition-fast);
 }
 
 .toggle-pwd-btn:hover {

@@ -3,7 +3,32 @@ import { Instagram, Send, Facebook, Phone, Mail, MapPin } from 'lucide-react';
 import { FOOTER_LINKS } from '../data/products';
 import './Footer.css';
 
-export default function Footer() {
+export default function Footer({
+  onOpenPhilosophy,
+  onOpenGrasse,
+  onOpenGlasscraft,
+  onOpenEco,
+  onOpenCareer,
+}) {
+  const handleAboutLinkClick = (e, label) => {
+    if (label.includes('فلسفه برند')) {
+      e.preventDefault();
+      if (onOpenPhilosophy) onOpenPhilosophy();
+    } else if (label.includes('مزارع اختصاصی') || label.includes('گراس')) {
+      e.preventDefault();
+      if (onOpenGrasse) onOpenGrasse();
+    } else if (label.includes('شیشه‌گری') || label.includes('شیشه گری')) {
+      e.preventDefault();
+      if (onOpenGlasscraft) onOpenGlasscraft();
+    } else if (label.includes('زیست‌محیطی') || label.includes('محیط زیست') || label.includes('محیط‌زیستی')) {
+      e.preventDefault();
+      if (onOpenEco) onOpenEco();
+    } else if (label.includes('همکاری') || label.includes('فرصت')) {
+      e.preventDefault();
+      if (onOpenCareer) onOpenCareer();
+    }
+  };
+
   return (
     <footer id="footer" className="footer-wrapper">
       <div className="app-container">
@@ -67,7 +92,11 @@ export default function Footer() {
             <ul className="footer-links-list">
               {FOOTER_LINKS.about.map((link, i) => (
                 <li key={i}>
-                  <a href={link.href} className="footer-link">
+                  <a
+                    href={link.href}
+                    className="footer-link"
+                    onClick={(e) => handleAboutLinkClick(e, link.label)}
+                  >
                     {link.label}
                   </a>
                 </li>
