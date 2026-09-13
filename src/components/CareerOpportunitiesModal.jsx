@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Sparkles, Briefcase, CheckCircle2, Send, Users, Award, Clock, ArrowLeft } from 'lucide-react';
+import { X, Sparkles, Briefcase, CheckCircle2, Send, Users, Award, Clock } from 'lucide-react';
+import { useAdminStore } from '../data/adminStore';
 import './CareerOpportunitiesModal.css';
 
+const FIELD_LABELS = {
+  perfumer: 'طراحی و ارزیابی رایحه (Nose / Perfumer)',
+  advisor: 'مشاور و سفیر فروش در بوتیک‌های آنتی',
+  marketing: 'دیجیتال مارکتینگ و روابط عمومی لوکس',
+  chemist: 'آزمایشگاه، فرمولاسیون و کنترل کیفیت',
+  logistics: 'بسته‌بندی فاخر، انبارداری و ارسال',
+  other: 'سایر زمینه‌ها و پیشنهادات همکاری تجاری',
+};
+
 export default function CareerOpportunitiesModal({ isOpen, onClose }) {
+  const { addCareerApplication } = useAdminStore();
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -18,6 +29,18 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.fullName.trim() || !formData.phone.trim()) return;
+
+    if (typeof addCareerApplication === 'function') {
+      addCareerApplication({
+        fullName: formData.fullName.trim(),
+        mobile: formData.phone.trim(),
+        email: formData.email.trim() || 'ندارد',
+        role: FIELD_LABELS[formData.field] || 'سایر زمینه‌ها',
+        message: formData.portfolioNote.trim() || 'درخواست همکاری عمومی',
+        date: new Date().toLocaleDateString('fa-IR'),
+      });
+    }
+
     setIsSubmitted(true);
   };
 
@@ -80,7 +103,7 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
 
             {/* Modal Scrollable Body */}
             <div className="career-body">
-              {/* Part 1: شرایط همکاری مختصر و مفید */}
+              {/* Qualifications */}
               <div className="career-section">
                 <div className="career-section-header">
                   <span className="career-kicker">اصول و نیازمندی‌ها</span>
@@ -131,7 +154,7 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
                 </div>
               </div>
 
-              {/* Part 2: باکس دعوت به همکاری و فرم ارسال رزومه */}
+              {/* Form Section */}
               <div className="career-form-section">
                 <div className="career-invite-box">
                   <div className="invite-box-header">
@@ -165,7 +188,6 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
                   ) : (
                     <form className="career-form" onSubmit={handleSubmit}>
                       <div className="career-form-grid">
-                        {/* Full Name */}
                         <div className="form-group">
                           <label className="form-label" htmlFor="career-name">
                             نام و نام خانوادگی <span className="req">*</span>
@@ -181,7 +203,6 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
                           />
                         </div>
 
-                        {/* Phone */}
                         <div className="form-group">
                           <label className="form-label" htmlFor="career-phone">
                             شماره تماس همراه <span className="req">*</span>
@@ -198,7 +219,6 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
                           />
                         </div>
 
-                        {/* Email */}
                         <div className="form-group">
                           <label className="form-label" htmlFor="career-email">
                             آدرس ایمیل
@@ -214,7 +234,6 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
                           />
                         </div>
 
-                        {/* Field of Interest */}
                         <div className="form-group">
                           <label className="form-label" htmlFor="career-field">
                             زمینه همکاری مورد علاقه <span className="req">*</span>
@@ -235,7 +254,6 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
                         </div>
                       </div>
 
-                      {/* Brief Notes / Resume Link */}
                       <div className="form-group mt-3">
                         <label className="form-label" htmlFor="career-note">
                           خلاصه سوابق، لینک رزومه یا پیام شما
@@ -250,7 +268,6 @@ export default function CareerOpportunitiesModal({ isOpen, onClose }) {
                         />
                       </div>
 
-                      {/* Submit button */}
                       <div className="form-submit-row">
                         <button type="submit" className="btn-primary career-submit-btn">
                           <span>ارسال فرم درخواست همکاری</span>

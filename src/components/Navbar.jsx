@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, Home, Sparkles, HelpCircle, User, BookOpen, Flower2 } from 'lucide-react';
+import { Search, ShoppingBag, Home, Sparkles, User, BookOpen } from 'lucide-react';
 import './Navbar.css';
 
 export default function Navbar({
@@ -8,8 +8,6 @@ export default function Navbar({
   onOpenSearch,
   onOpenAuth,
   currentUser,
-  onOpenPhilosophy,
-  onOpenGrasse,
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -34,7 +32,6 @@ export default function Navbar({
         if (el) {
           const rect = el.getBoundingClientRect();
           if (rect.top <= checkOffset && rect.bottom > checkOffset) {
-            // Group product-related sections under 'collection'
             if (id === 'bestsellers') {
               current = 'collection';
             } else if (id === 'testimonials') {
@@ -56,10 +53,10 @@ export default function Navbar({
 
   return (
     <>
-      {/* Top Header */}
+      {/* Header اصلی بالای صفحه */}
       <header className={`navbar-wrapper ${isScrolled ? 'navbar-scrolled' : ''}`}>
         <div className="app-container navbar-container">
-          {/* Brand Logo: Cursive Script Logo with subtle luxury color transition */}
+          {/* لوگوی برند */}
           <div className="navbar-brand">
             <a href="#hero" className="brand-logo-script-link" aria-label="Anti Luxury Parfums">
               <span className="brand-script-text">Anti</span>
@@ -67,7 +64,7 @@ export default function Navbar({
             <span className="brand-badge-script">PARFUM</span>
           </div>
 
-          {/* Desktop Center Navigation Links: خانه، محصولات، درباره ما، مجله، سوالات متداول، تماس با ما */}
+          {/* منوی ناوبری دسکتاپ */}
           <nav className="navbar-nav desktop-nav">
             <a
               href="#hero"
@@ -107,7 +104,7 @@ export default function Navbar({
             </a>
           </nav>
 
-          {/* Desktop & Top Actions: Search, User Account & Cart Button */}
+          {/* دکمه‌های عملیاتی (جستجو، پروفایل، سبد خرید) */}
           <div className="navbar-actions">
             <button
               type="button"
@@ -119,7 +116,6 @@ export default function Navbar({
               <span className="search-text">جستجو...</span>
             </button>
 
-            {/* Account / Login Button beside Cart */}
             <button
               type="button"
               className={`user-circle-btn ${currentUser ? 'user-logged-in' : ''}`}
@@ -134,7 +130,6 @@ export default function Navbar({
               {currentUser && <span className="user-vip-dot" />}
             </button>
 
-            {/* Cart Button */}
             <button
               type="button"
               className="cart-circle-btn"
@@ -148,7 +143,7 @@ export default function Navbar({
         </div>
       </header>
 
-      {/* Mobile Bottom Dock Navigation (Replaces Top Hamburger Menu on Responsive Devices) */}
+      {/* منوی شناور پایین صفحه برای موبایل */}
       <nav className="mobile-bottom-dock" aria-label="منوی ناوبری موبایل">
         <a
           href="#hero"

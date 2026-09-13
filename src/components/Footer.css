@@ -1,10 +1,116 @@
-/* Footer.css */
+/* ====================================================
+   FOOTER SECTION - LUXURY UNIFIED STAGE WITH OVERLAPPING BOX
+   ==================================================== */
+
 .footer-wrapper {
   background-color: var(--bg-secondary);
-  padding: 70px 0 30px;
+  padding-top: 85px; /* Extra spacing at top to accommodate the overlapping box */
+  padding-bottom: 30px;
   border-top: 1px solid rgba(224, 134, 154, 0.4);
   position: relative;
+  overflow: visible; /* Essential for top floating box overlap */
+  margin-top: 75px; /* Spacing from section above */
 }
+
+.footer-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* ====================================================
+   FLOATING FEATURE BOX - OVERLAPPING FOOTER TOP BOUNDARY
+   ==================================================== */
+.footer-features-overlap-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: -46px; /* Half inside section above, half inside footer */
+  width: calc(100% - 48px);
+  max-width: 1180px;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.footer-floating-box {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid rgba(232, 201, 197, 0.7);
+  box-shadow: 0 16px 36px rgba(122, 38, 54, 0.08), 0 4px 14px rgba(46, 41, 40, 0.03);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  direction: rtl;
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.footer-floating-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  padding: 4px 16px;
+  cursor: pointer !important;
+}
+
+.footer-floating-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background-color: rgba(245, 211, 217, 0.45);
+  color: var(--primary-burgundy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.footer-floating-item:hover .footer-floating-icon-box {
+  background-color: rgba(245, 211, 217, 0.85);
+  transform: translateY(-2px);
+}
+
+.footer-floating-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-floating-title {
+  font-family: var(--font-heading);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+}
+
+.footer-floating-subtitle {
+  font-family: var(--font-persian);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.footer-floating-divider {
+  position: absolute;
+  left: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background-color: rgba(232, 201, 197, 0.5);
+  pointer-events: none;
+}
+
+/* ====================================================
+   MAIN FOOTER CONTENT & GRID
+   ==================================================== */
 
 .footer-grid {
   display: grid;
@@ -36,7 +142,6 @@
   transform: scaleX(1.05);
   display: inline-block;
   direction: ltr;
-  animation: subtleLuxeShift 10s ease-in-out infinite alternate;
 }
 
 .footer-logo-badge {
@@ -193,8 +298,32 @@
   font-size: 0.8rem;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+/* ====================================================
+   RESPONSIVE BREAKPOINTS (MATCHED WITH HERO SECTION)
+   ==================================================== */
+
+@media (max-width: 992px) {
+  .footer-wrapper {
+    margin-top: 70px;
+    padding-top: 80px;
+  }
+
+  .footer-features-overlap-wrapper {
+    top: -46px;
+    width: calc(100% - 36px);
+    max-width: 720px;
+  }
+
+  .footer-floating-box {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 16px 20px;
+  }
+
+  .footer-floating-divider {
+    display: none;
+  }
+
   .footer-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
@@ -211,7 +340,50 @@
   }
 }
 
-@media (max-width: 650px) {
+/* Mobile Layout: Perfectly matched floating box overlapping top boundary */
+@media (max-width: 768px) {
+  .footer-wrapper {
+    margin-top: 65px;
+    padding-top: 75px;
+  }
+
+  .footer-features-overlap-wrapper {
+    top: -48px;
+    width: calc(100% - 24px);
+    max-width: 520px;
+  }
+
+  .footer-floating-box {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 12px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(158, 43, 69, 0.08);
+  }
+
+  .footer-floating-item {
+    padding: 2px 0;
+    gap: 8px;
+  }
+
+  .footer-floating-icon-box {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+  }
+
+  .footer-floating-title {
+    font-size: 0.8rem;
+  }
+
+  .footer-floating-subtitle {
+    font-size: 0.68rem;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -226,5 +398,35 @@
   .footer-bottom-bar {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .footer-wrapper {
+    margin-top: 60px;
+    padding-top: 70px;
+  }
+
+  .footer-features-overlap-wrapper {
+    top: -46px;
+    width: calc(100% - 18px);
+  }
+
+  .footer-floating-box {
+    gap: 6px 10px;
+    padding: 10px 12px;
+  }
+
+  .footer-floating-icon-box {
+    width: 30px;
+    height: 30px;
+  }
+
+  .footer-floating-title {
+    font-size: 0.75rem;
+  }
+
+  .footer-floating-subtitle {
+    font-size: 0.64rem;
   }
 }

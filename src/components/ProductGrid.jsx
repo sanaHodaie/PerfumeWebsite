@@ -2,10 +2,11 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Search, ArrowUpDown, ChevronDown, Check } from 'lucide-react';
 import ProductCard from './ProductCard';
-import { PRODUCTS } from '../data/products';
+import { useAdminStore } from '../data/adminStore';
 import './ProductGrid.css';
 
 export default function ProductGrid({ onAddToCart, onQuickView }) {
+  const { products } = useAdminStore();
   const [showAll, setShowAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('همه');
@@ -23,7 +24,6 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
     { value: 'price-high', label: 'گران‌ترین' },
   ];
 
-  // بستن دراپ‌داون هنگام کلیک بیرون از آن
   useEffect(() => {
     function handleClickOutside(event) {
       if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
@@ -35,15 +35,16 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
   }, []);
 
   const processedProducts = useMemo(() => {
-    let result = [...PRODUCTS];
+    // ✅ فیلتر محصولات غیرفعال (isActive === false)
+    let result = [...(products || [])].filter((p) => p.isActive !== false);
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
         (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.englishName.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q) ||
+          p.name?.toLowerCase().includes(q) ||
+          p.englishName?.toLowerCase().includes(q) ||
+          p.category?.toLowerCase().includes(q) ||
           p.notes?.top?.toLowerCase().includes(q) ||
           p.notes?.heart?.toLowerCase().includes(q) ||
           p.notes?.base?.toLowerCase().includes(q)
@@ -53,21 +54,21 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
     if (selectedCategory === 'پرفروش‌ترین‌ها') {
       result = result.filter((p) => p.isBestSeller);
     } else if (selectedCategory === 'گرم و شیرین') {
-      result = result.filter((p) => p.category.includes('گرم') || p.category.includes('شیرین'));
+      result = result.filter((p) => p.category?.includes('گرم') || p.category?.includes('شیرین'));
     } else if (selectedCategory === 'خنک و ملایم') {
-      result = result.filter((p) => p.category.includes('خنک') || p.category.includes('ملایم'));
+      result = result.filter((p) => p.category?.includes('خنک') || p.category?.includes('ملایم'));
     }
 
     if (sortBy === 'price-low') {
-      result.sort((a, b) => a.price - b.price);
+      result.sort((a, b) => Number(a.price) - Number(b.price));
     } else if (sortBy === 'price-high') {
-      result.sort((a, b) => b.price - a.price);
+      result.sort((a, b) => Number(b.price) - Number(a.price));
     } else if (sortBy === 'rating') {
-      result.sort((a, b) => b.rating - a.rating);
+      result.sort((a, b) => Number(b.rating || 0) - Number(a.rating || 0));
     }
 
     return result;
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [products, searchQuery, selectedCategory, sortBy]);
 
   const displayedProducts = showAll ? processedProducts : processedProducts.slice(0, 5);
   const activeSortLabel = sortOptions.find((opt) => opt.value === sortBy)?.label;
@@ -75,7 +76,6 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
   return (
     <section id="collection" className="collection-section" aria-label="مجموعه کامل عطرهای آنتی">
       <div className="app-container">
-        {/* هدر بخش */}
         <motion.div
           className="section-header"
           initial={{ opacity: 0, y: 20 }}
@@ -104,7 +104,6 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
           </button>
         </motion.div>
 
-        {/* نوار ابزار فیلتر و مرتب‌سازی */}
         <div className="collection-toolbar">
           <div className="category-pills">
             {categories.map((cat) => (
@@ -129,7 +128,6 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
               />
             </div>
 
-            {/* دراپ داون کاملاً سفارشی کامپوننتی */}
             <div className="custom-dropdown-container" ref={sortDropdownRef}>
               <button
                 type="button"
@@ -170,7 +168,6 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
           </div>
         </div>
 
-        {/* گرید محصولات */}
         {displayedProducts.length > 0 ? (
           <motion.div className="products-grid-5" layout>
             <AnimatePresence>

@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Sparkles, Leaf, Recycle, Heart, Droplets, Sun, Globe2, ArrowLeft, ShieldCheck } from 'lucide-react';
 import './EcoResponsibilityModal.css';
 
+import enviroment from '../assets/images/nothing.webp';
+
+
 export default function EcoResponsibilityModal({ isOpen, onClose, onExploreCollection }) {
   if (!isOpen) return null;
 
@@ -32,7 +35,7 @@ export default function EcoResponsibilityModal({ isOpen, onClose, onExploreColle
             {/* Modal Hero Banner */}
             <div className="eco-hero">
               <img
-                src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1200&q=80"
+                src={enviroment}
                 alt="مسئولیت زیست‌محیطی و پایداری برند آنتی"
                 className="eco-hero-bg"
                 referrerPolicy="no-referrer"

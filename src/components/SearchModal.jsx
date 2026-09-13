@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { X, Search, ArrowLeft } from 'lucide-react';
-import { PRODUCTS } from '../data/products';
+import { useAdminStore } from '../data/adminStore'; // همگام‌سازی با پنل ادمین
 import './SearchModal.css';
 
 export default function SearchModal({ isOpen, onClose, onSelectProduct }) {
+  const { products } = useAdminStore();
   const [searchTerm, setSearchTerm] = useState('');
 
   if (!isOpen) return null;
 
-  const filteredProducts = PRODUCTS.filter((p) => {
+  const filteredProducts = (products || []).filter((p) => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return true;
     return (
-      p.name.includes(term) ||
-      p.englishName.toLowerCase().includes(term) ||
-      p.description.includes(term) ||
-      p.category.includes(term)
+      p.name?.toLowerCase().includes(term) ||
+      p.englishName?.toLowerCase().includes(term) ||
+      p.description?.toLowerCase().includes(term) ||
+      p.category?.toLowerCase().includes(term)
     );
   });
 

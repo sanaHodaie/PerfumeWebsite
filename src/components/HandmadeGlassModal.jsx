@@ -2,6 +2,8 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Sparkles, Flame, Gem, ShieldCheck, ArrowLeft, Layers, Palette } from 'lucide-react';
 import './HandmadeGlassModal.css';
+import tallBottle from '../assets/images/Gemini_Generated_Image_whsyutwhsyutwhsy-tinypng.io.webp';
+
 
 export default function HandmadeGlassModal({ isOpen, onClose, onExploreCollection }) {
   if (!isOpen) return null;
@@ -32,7 +34,7 @@ export default function HandmadeGlassModal({ isOpen, onClose, onExploreCollectio
             {/* Modal Hero Banner */}
             <div className="glass-hero">
               <img
-                src="/anti_crystal_parfum.jpg"
+                src={tallBottle}
                 alt="هنر شیشه‌گری دست‌ساز و بطری‌های کریستالی آنتی"
                 className="glass-hero-bg"
                 referrerPolicy="no-referrer"

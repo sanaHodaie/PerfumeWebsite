@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Star, Plus, ArrowLeft, Check } from 'lucide-react';
-import { PRODUCTS, PROMOTIONAL_BANNER_2 } from '../data/products';
+import { PROMOTIONAL_BANNER_2 } from '../data/products';
+import { useAdminStore } from '../data/adminStore';
 import './BestSellers.css';
 
-// تابع تبدیل اعداد انگلیسی به فارسی
 const toFaDigit = (num) => {
+  if (num === undefined || num === null) return '';
   const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
   return num.toString().replace(/\d/g, (x) => farsiDigits[x]);
 };
 
 export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }) {
-  const bestSellerList = PRODUCTS.filter((p) => p.isBestSeller).slice(0, 4);
+  const { products } = useAdminStore();
+
+  // ✅ فیلتر پرفروش‌های فعال (نه غیرفعال)
+  const bestSellerList = (products || [])
+    .filter((p) => p.isBestSeller && p.isActive !== false)
+    .slice(0, 4);
+
   const [addedItems, setAddedItems] = useState({});
 
   const handleAddWithFeedback = (e, item) => {
     e.stopPropagation();
     onAddToCart(item);
-    
+
     setAddedItems((prev) => ({ ...prev, [item.id]: true }));
     setTimeout(() => {
       setAddedItems((prev) => ({ ...prev, [item.id]: false }));
@@ -28,9 +35,9 @@ export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }
     <section id="bestsellers" className="bestsellers-section" aria-label="عطرهای پرفروش آنتی">
       <div className="app-container">
         <div className="bestsellers-layout">
-          
+
           <div className="bestsellers-list-column">
-            
+
             <motion.div
               className="bestsellers-header"
               initial={{ opacity: 0, y: 20 }}
@@ -42,7 +49,7 @@ export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }
                 <span className="bestsellers-eyebrow">محبوب‌ترین رایحه‌ها از نگاه مشتریان</span>
                 <h2 className="bestsellers-title">پرفروش‌ترین‌ها</h2>
               </div>
-              
+
               <button
                 type="button"
                 id="bestsellers-view-all-btn"
@@ -71,7 +78,6 @@ export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }
                     transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
                     onClick={() => onQuickView(item)}
                   >
-                    {/* رتبه فارسی */}
                     <span className="bestseller-rank">{toFaDigit(`0${index + 1}`)}</span>
 
                     <div className="bestseller-thumbnail">
@@ -89,7 +95,7 @@ export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }
 
                       <div className="bestseller-meta">
                         <span className="bestseller-price">{item.priceFormatted}</span>
-                        
+
                         <div className="bestseller-rating">
                           <div className="stars-row">
                             {[...Array(5)].map((_, i) => (
@@ -147,7 +153,7 @@ export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }
                 <span className="art-tag">میراث عطرسازی دست‌ساز</span>
                 <h3 className="art-heading font-serif-luxury">{PROMOTIONAL_BANNER_2.heading}</h3>
                 <p className="art-text">{PROMOTIONAL_BANNER_2.text}</p>
-                
+
                 <button
                   type="button"
                   id="art-cta-btn"
