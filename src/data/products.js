@@ -6,16 +6,16 @@
 import promoBanner1Image from '../assets/images/Gemini_Generated_Image_b3ymqdb3ymqdb3ym-tinypng.io.webp';
 import promoMobileImage from '../assets/images/your-mobile-banner-tinypng.io.webp';
 import seondPoster from '../assets/images/8745f468126aba97f8b83b297ef12fa9-tinypng.io.webp';
-import BaccaratRouge from '../assets/images/Gemini_Generated_Image_3zhxik3zhxik3zhx-tinypng.io.webp';
-import Dioradore from '../assets/images/Gemini_Generated_Image_jbv2iwjbv2iwjbv2-tinypng.io.webp';
-import TomFordBlackOrchid from '../assets/images/Gemini_Generated_Image_84d89q84d89q84d8-tinypng.io.webp';
-import ChanelCocoMademoiselle from '../assets/images/Gemini_Generated_Image_3ybl9m3ybl9m3ybl-tinypng.io.webp';
-import YSLBlackOpium from '../assets/images/Gemini_Generated_Image_q6vozpq6vozpq6vo-tinypng.io.webp';
-import ParfumsdeMarlyDelina from '../assets/images/Gemini_Generated_Image_e564y3e564y3e564-tinypng.io.webp';
-import LancômeLaVieEstBelle from '../assets/images/Gemini_Generated_Image_frv7clfrv7clfrv7-tinypng.io.webp';
-import VersaceBrightCrystal from '../assets/images/Gemini_Generated_Image_358fpo358fpo358f-tinypng.io.webp';
-import GiorgioArmaniSì from '../assets/images/Gemini_Generated_Image_i73i4ci73i4ci73i-tinypng.io.webp';
-import CreedAventusforHer from '../assets/images/Gemini_Generated_Image_gjsvrhgjsvrhgjsv-tinypng.io.webp';
+import BaccaratRouge from '../assets/images/baccarat-rouge-540.webp';
+import Dioradore from '../assets/images/jadore.webp';
+import TomFordBlackOrchid from '../assets/images/black-orchid.webp';
+import ChanelCocoMademoiselle from '../assets/images/coco-mademoiselle.webp';
+import YSLBlackOpium from '../assets/images/black-opium.webp';
+import ParfumsdeMarlyDelina from '../assets/images/delina.webp';
+import LancômeLaVieEstBelle from '../assets/images/la-vie-est-belle.webp';
+import VersaceBrightCrystal from '../assets/images/bright-crystal.webp';
+import GiorgioArmaniSì from '../assets/images/si.webp';
+import CreedAventusforHer from '../assets/images/aventus-for-her.webp';
 
 export const HERO_DATA = {
   brand: "آنتی",

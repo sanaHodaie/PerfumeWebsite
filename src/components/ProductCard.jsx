@@ -14,13 +14,13 @@ export default function ProductCard({ product, index = 0, onAddToCart, onQuickVi
     >
       <div className="product-card-visual-wrapper">
         <div className="product-card-visual">
-          <motion.img
-            src={product.image}
-            alt={product.name}
-            className="product-card-img"
-            loading="lazy"
-            whileHover={{ scale: 1.08 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          <motion.img 
+            src={product.image} 
+            alt={product.name} 
+            className="product-card-img" 
+            loading="lazy" 
+            whileHover={{ scale: 1.08 }} 
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} 
           />
 
           {/* Quick View and Add to Cart action buttons on top right */}
