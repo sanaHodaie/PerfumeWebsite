@@ -7,11 +7,14 @@ import {
   FOOTER_LINKS as INITIAL_FOOTER_LINKS,
 } from './products';
 
+
 import {
+  getProducts,
   createProduct,
   updateProduct as updateProductInSupabase,
   deleteProduct as deleteProductFromSupabase,
 } from '../lib/productsApi';
+
 
 const STORAGE_KEYS = {
   PRODUCTS: 'anti_admin_products_v1',
@@ -266,22 +269,48 @@ export function useAdminStore() {
   }, []);
 
   // Actions
-  const addProduct = (newProd) => {
-    const id = Date.now();
-    const product = {
-      ...newProd,
-      id,
-      rating: newProd.rating || 5.0,
-      reviewsCount: newProd.reviewsCount || 1,
-      priceFormatted: Number(newProd.price).toLocaleString('fa-IR') + ' تومان',
-    };
-    const updated = [product, ...cachedState.products];
-    cachedState = { ...cachedState, products: updated };
-    saveToLocalStorage(STORAGE_KEYS.PRODUCTS, updated);
-    notifyListeners();
-    return product;
-  };
+  const addProduct = async (newProd) => {
+  try {
+    console.log('🟡 addProduct اجرا شد:', newProd);
 
+    // اول محصول را در Supabase ایجاد می‌کنیم
+    const product = await createProduct({
+      name: newProd.name,
+      englishName: newProd.englishName,
+      description: newProd.description,
+      price: newProd.price,
+      volume: newProd.volume,
+      category: newProd.category,
+      notes: newProd.notes,
+      rating: newProd.rating || 5,
+      reviewsCount: newProd.reviewsCount || 0,
+      isBestSeller: Boolean(newProd.isBestSeller),
+      isActive: newProd.isActive !== false,
+      image: newProd.image,
+    });
+
+    console.log('🟢 محصول در Supabase ساخته شد:', product);
+
+    // بعد state محلی را با محصول واقعی Supabase به‌روزرسانی می‌کنیم
+    const updated = [product, ...cachedState.products];
+
+    cachedState = {
+      ...cachedState,
+      products: updated,
+    };
+
+    // این فقط برای هماهنگی state فعلی پنل است
+    // منبع اصلی اطلاعات Supabase است
+    saveToLocalStorage(STORAGE_KEYS.PRODUCTS, updated);
+
+    notifyListeners();
+
+    return product;
+  } catch (error) {
+    console.error('❌ خطا در اضافه کردن محصول به Supabase:', error);
+    throw error;
+  }
+};
 const updateProduct = async (id, updatedFields) => {
   console.log('🟡 updateProduct اجرا شد:', id, updatedFields);
   try {
