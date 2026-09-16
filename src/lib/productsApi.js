@@ -45,38 +45,41 @@ export async function getProducts() {
 }
 
 // اضافه کردن محصول
+// اضافه کردن محصول
 export async function createProduct(product) {
+  console.log('🟡 createProduct - ارسال به Supabase:', product);
+
+  const insertData = {
+    name: product.name,
+    english_name: product.englishName,
+    description: product.description || '',
+    price: Number(product.price),
+    volume: product.volume || '',
+    category: product.category || '',
+
+    rating: Number(product.rating || 5),
+    reviews_count: Number(product.reviewsCount || 0),
+
+    is_best_seller: Boolean(product.isBestSeller),
+    is_active: product.isActive !== false,
+
+    image_url: product.image || '',
+  };
+
+  console.log('📦 داده‌ای که قرار است INSERT شود:', insertData);
+
   const { data, error } = await supabase
     .from('products')
-    .insert({
-      name: product.name,
-      english_name: product.englishName,
-      description: product.description,
-      price: Number(product.price),
-      volume: product.volume,
-      category: product.category,
-
-      notes: product.notes || {
-        top: '',
-        heart: '',
-        base: '',
-      },
-
-      rating: Number(product.rating || 5),
-      reviews_count: Number(product.reviewsCount || 0),
-
-      is_best_seller: Boolean(product.isBestSeller),
-      is_active: product.isActive !== false,
-
-      image_url: product.image,
-    })
+    .insert(insertData)
     .select()
     .single();
 
   if (error) {
-    console.error('Supabase create product error:', error);
+    console.error('❌ Supabase create product error:', error);
     throw error;
   }
+
+  console.log('🟢 محصول واقعاً در Supabase ساخته شد:', data);
 
   return mapProduct(data);
 }

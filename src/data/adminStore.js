@@ -269,11 +269,10 @@ export function useAdminStore() {
   }, []);
 
   // Actions
-  const addProduct = async (newProd) => {
+const addProduct = async (newProd) => {
   try {
     console.log('🟡 addProduct اجرا شد:', newProd);
 
-    // اول محصول را در Supabase ایجاد می‌کنیم
     const product = await createProduct({
       name: newProd.name,
       englishName: newProd.englishName,
@@ -281,33 +280,42 @@ export function useAdminStore() {
       price: newProd.price,
       volume: newProd.volume,
       category: newProd.category,
-      notes: newProd.notes,
+
       rating: newProd.rating || 5,
       reviewsCount: newProd.reviewsCount || 0,
+
       isBestSeller: Boolean(newProd.isBestSeller),
       isActive: newProd.isActive !== false,
+
       image: newProd.image,
     });
 
     console.log('🟢 محصول در Supabase ساخته شد:', product);
 
-    // بعد state محلی را با محصول واقعی Supabase به‌روزرسانی می‌کنیم
-    const updated = [product, ...cachedState.products];
+    const updatedProducts = [
+      product,
+      ...cachedState.products,
+    ];
 
     cachedState = {
       ...cachedState,
-      products: updated,
+      products: updatedProducts,
     };
 
-    // این فقط برای هماهنگی state فعلی پنل است
-    // منبع اصلی اطلاعات Supabase است
-    saveToLocalStorage(STORAGE_KEYS.PRODUCTS, updated);
+    saveToLocalStorage(
+      STORAGE_KEYS.PRODUCTS,
+      updatedProducts
+    );
 
     notifyListeners();
 
     return product;
   } catch (error) {
-    console.error('❌ خطا در اضافه کردن محصول به Supabase:', error);
+    console.error(
+      '❌ خطا در اضافه کردن محصول به Supabase:',
+      error
+    );
+
     throw error;
   }
 };
