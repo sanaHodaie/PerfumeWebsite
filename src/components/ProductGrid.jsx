@@ -4,9 +4,17 @@ import { Sparkles, Search, ArrowUpDown, ChevronDown, Check } from 'lucide-react'
 import ProductCard from './ProductCard';
 import { useAdminStore } from '../data/adminStore';
 import './ProductGrid.css';
+import { useProducts } from '../hooks/useProducts';
 
 export default function ProductGrid({ onAddToCart, onQuickView }) {
-  const { products } = useAdminStore();
+  const { products: adminProducts } = useAdminStore();
+  const { products: supabaseProducts,
+     loading,
+      error
+     } = useProducts();
+     console.log('🛍️ ProductGrid - Supabase:', supabaseProducts);
+
+  const products = supabaseProducts;
   const [showAll, setShowAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('همه');

@@ -7,6 +7,12 @@ import {
   FOOTER_LINKS as INITIAL_FOOTER_LINKS,
 } from './products';
 
+import {
+  createProduct,
+  updateProduct as updateProductInSupabase,
+  deleteProduct as deleteProductFromSupabase,
+} from '../lib/productsApi';
+
 const STORAGE_KEYS = {
   PRODUCTS: 'anti_admin_products_v1',
   FAQS: 'anti_admin_faqs_v1',
@@ -276,21 +282,25 @@ export function useAdminStore() {
     return product;
   };
 
-  const updateProduct = (id, updatedFields) => {
-    const updated = cachedState.products.map((p) => {
-      if (p.id === id) {
-        const merged = { ...p, ...updatedFields };
-        if (updatedFields.price !== undefined) {
-          merged.priceFormatted = Number(updatedFields.price).toLocaleString('fa-IR') + ' تومان';
-        }
-        return merged;
-      }
-      return p;
-    });
+const updateProduct = async (id, updatedFields) => {
+  console.log('🟡 updateProduct اجرا شد:', id, updatedFields);
+  try {
+    const updatedProduct = await updateProductInSupabase(id, updatedFields);
+
+    const updated = cachedState.products.map((p) =>
+      p.id === id ? updatedProduct : p
+    );
+
     cachedState = { ...cachedState, products: updated };
-    saveToLocalStorage(STORAGE_KEYS.PRODUCTS, updated);
+
     notifyListeners();
-  };
+
+    return updatedProduct;
+  } catch (error) {
+    console.error('❌ خطا در ویرایش محصول در Supabase:', error);
+    throw error;
+  }
+};
 
   const deleteProduct = (id) => {
     const updated = cachedState.products.filter((p) => p.id !== id);

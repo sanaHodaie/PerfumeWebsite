@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -25,12 +25,30 @@ import Toast from './components/Toast';
 import BackToTop from './components/BackToTop';
 import AdminPanel from './components/AdminPanel/AdminPanel';
 import AdminLogin from './components/AdminPanel/AdminLogin';
+import { getProducts } from './lib/productsApi';
 
 import { PRODUCTS } from './data/products';
 
 export default function App() {
   const navigate = useNavigate();
 
+    useEffect(() => {
+  async function testSupabase() {
+    console.log('🚀 TEST: App useEffect اجرا شد');
+
+    try {
+      const products = await getProducts();
+
+      console.log('✅ Supabase products:', products);
+      console.log('📦 تعداد محصولات:', products.length);
+      console.log('🧪 اولین محصول:', products[0]);
+    } catch (error) {
+      console.error('❌ Supabase connection failed:', error);
+    }
+  }
+
+  testSupabase();
+}, []);
   // Cart State (Initialized with 1 default luxury bottle for instant visual delight)
   const [cart, setCart] = useState([
     {
