@@ -6,7 +6,7 @@ import { getProducts } from '../data/productsApi';
 import './BestSellers.css';
 
 const toFaDigit = (num) => {
-  if (num === undefined || num === null || num === '') return '';
+  if (num === undefined || num === null) return '';
   const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
   return num.toString().replace(/\d/g, (x) => farsiDigits[x]);
 };
@@ -133,9 +133,7 @@ export default function BestSellers({
                               />
                             ))}
                           </div>
-                          <span className="rating-score">
-                            ({toFaDigit(item.rating ?? 5)})
-                          </span>
+                          <span className="rating-score">({toFaDigit(item.rating)})</span>
                         </div>
                       </div>
                     </div>
