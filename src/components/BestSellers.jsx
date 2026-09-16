@@ -1,25 +1,51 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Star, Plus, ArrowLeft, Check } from 'lucide-react';
 import { PROMOTIONAL_BANNER_2 } from '../data/products';
-import { useAdminStore } from '../data/adminStore';
+import { getProducts } from '../data/productsApi';
 import './BestSellers.css';
 
 const toFaDigit = (num) => {
-  if (num === undefined || num === null) return '';
+  if (num === undefined || num === null || num === '') return '';
   const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
   return num.toString().replace(/\d/g, (x) => farsiDigits[x]);
 };
 
-export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }) {
-  const { products } = useAdminStore();
+export default function BestSellers({
+  onAddToCart,
+  onQuickView,
+  onExploreNotes,
+}) {
+  const [products, setProducts] = useState([]);
+  const [addedItems, setAddedItems] = useState({});
 
-  // ✅ فیلتر پرفروش‌های فعال (نه غیرفعال)
-  const bestSellerList = (products || [])
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadProducts() {
+      try {
+        const data = await getProducts();
+
+        if (isMounted) {
+          setProducts(Array.isArray(data) ? data : []);
+          console.log('🏆 BestSellers - Supabase:', data);
+        }
+      } catch (error) {
+        console.error('❌ BestSellers - Supabase error:', error);
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // فقط محصولات پرفروش و فعال
+  const bestSellerList = products
     .filter((p) => p.isBestSeller && p.isActive !== false)
     .slice(0, 4);
-
-  const [addedItems, setAddedItems] = useState({});
 
   const handleAddWithFeedback = (e, item) => {
     e.stopPropagation();
@@ -107,7 +133,9 @@ export default function BestSellers({ onAddToCart, onQuickView, onExploreNotes }
                               />
                             ))}
                           </div>
-                          <span className="rating-score">({toFaDigit(item.rating)})</span>
+                          <span className="rating-score">
+                            ({toFaDigit(item.rating ?? 5)})
+                          </span>
                         </div>
                       </div>
                     </div>
