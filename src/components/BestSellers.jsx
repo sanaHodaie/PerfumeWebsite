@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Star, Plus, ArrowLeft, Check } from 'lucide-react';
 import { PROMOTIONAL_BANNER_2 } from '../data/products';
-import { getProducts } from '../data/productsApi';
+import { getProducts } from '../lib/productsApi';
 import './BestSellers.css';
 
 const toFaDigit = (num) => {
