@@ -38,7 +38,7 @@ export default function QuickViewModal({ product, onClose, onAddToCart }) {
                     <Star key={i} size={14} fill="#E8A956" color="#E8A956" />
                   ))}
                 </div>
-                <span className="rating-num">({product.rating} از ۵ بر اساس {product.reviewsCount} نظر)</span>
+                <span className="rating-num">({product.rating}از5)</span>
               </div>
             </div>
 
