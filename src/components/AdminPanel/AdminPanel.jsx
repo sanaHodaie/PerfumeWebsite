@@ -27,8 +27,11 @@ import AdminSocialTab from './AdminSocialTab';
 import { useAdminStore } from '../../data/adminStore';
 import { toPersianDigits } from '../../utils/persianNumbers';
 import './AdminPanel.css';
+import { supabase } from '../../lib/supabase';
 
 export default function AdminPanel({ isOpen = true, onClose }) {
+
+  
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'products' | 'faq' | 'profile' | 'social'
   const [showNotifications, setShowNotifications] = useState(false);
@@ -41,14 +44,13 @@ export default function AdminPanel({ isOpen = true, onClose }) {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('anti_admin_logged_in');
-    if (onClose) {
-      onClose();
-    } else {
-      navigate('/');
-    }
-  };
+const handleLogout = () => {
+  if (onClose) {
+    onClose();
+  } else {
+    navigate('/');
+  }
+};
 
   const {
     products,

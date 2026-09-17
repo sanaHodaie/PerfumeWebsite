@@ -28,7 +28,6 @@ export default function BestSellers({
 
         if (isMounted) {
           setProducts(Array.isArray(data) ? data : []);
-          console.log('🏆 BestSellers - Supabase:', data);
         }
       } catch (error) {
         console.error('❌ BestSellers - Supabase error:', error);

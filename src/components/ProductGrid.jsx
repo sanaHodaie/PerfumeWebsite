@@ -12,7 +12,7 @@ export default function ProductGrid({ onAddToCart, onQuickView }) {
      loading,
       error
      } = useProducts();
-     console.log('🛍️ ProductGrid - Supabase:', supabaseProducts);
+
 
   const products = supabaseProducts;
   const [showAll, setShowAll] = useState(false);

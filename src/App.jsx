@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -25,31 +25,21 @@ import Toast from './components/Toast';
 import BackToTop from './components/BackToTop';
 import AdminPanel from './components/AdminPanel/AdminPanel';
 import AdminLogin from './components/AdminPanel/AdminLogin';
-import { getProducts } from './lib/productsApi';
-
+import { supabase } from './lib/supabase';
 import { PRODUCTS } from './data/products';
 
+import { isAdminUser } from './lib/adminAuth';
+
 export default function App() {
+  const ADMIN_USER_ID = '08c9a8ca-68fc-4810-bd6e-aa002711ab05';
+
+  // ✅ فقط یک بار تعریف می‌شود
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+
   const navigate = useNavigate();
 
-    useEffect(() => {
-  async function testSupabase() {
-    console.log('🚀 TEST: App useEffect اجرا شد');
-
-    try {
-      const products = await getProducts();
-
-      console.log('✅ Supabase products:', products);
-      console.log('📦 تعداد محصولات:', products.length);
-      console.log('🧪 اولین محصول:', products[0]);
-    } catch (error) {
-      console.error('❌ Supabase connection failed:', error);
-    }
-  }
-
-  testSupabase();
-}, []);
-  // Cart State (Initialized with 1 default luxury bottle for instant visual delight)
+  // Cart State
   const [cart, setCart] = useState([
     {
       id: 1,
@@ -79,15 +69,75 @@ export default function App() {
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [toastData, setToastData] = useState(null);
 
-  // Admin Panel State
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
-    return localStorage.getItem('anti_admin_logged_in') === 'true';
-  });
+  // ❌ تعریف تکراری حذف شد:
+  // const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  // const [isAuthChecking, setIsAuthChecking] = useState(true);
 
-  const handleAdminLoginSuccess = () => {
+  useEffect(() => {
+    let mounted = true;
+
+    const checkAdminSession = async () => {
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
+        if (error) {
+          console.error('❌ خطا در دریافت Session:', error);
+
+          if (mounted) {
+            setIsAdminLoggedIn(false);
+            setIsAuthChecking(false);
+          }
+
+          return;
+        }
+
+        const user = session?.user ?? null;
+
+
+        if (mounted) {
+          setIsAdminLoggedIn(isAdminUser(user));
+          setIsAuthChecking(false);
+        }
+      } catch (error) {
+        console.error('❌ خطای بررسی Auth:', error);
+
+        if (mounted) {
+          setIsAdminLoggedIn(false);
+          setIsAuthChecking(false);
+        }
+      }
+    };
+
+    checkAdminSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      const user = session?.user ?? null;
+      if (mounted) {
+        setIsAdminLoggedIn(isAdminUser(user));
+        setIsAuthChecking(false);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleAdminLoginSuccess = (user) => {
+    if (!isAdminUser(user)) {
+      console.error('🚨 کاربر مجاز نیست');
+      return;
+    }
+
     setIsAdminLoggedIn(true);
-    localStorage.setItem('anti_admin_logged_in', 'true');
     navigate('/admin');
+
     setToastData({
       title: 'ورود موفقیت‌آمیز ادمین',
       message: 'خوش آمدید! پنل مدیریت اختصاصی خانه عطر آنتی فعال گردید.',
@@ -95,18 +145,28 @@ export default function App() {
     });
   };
 
-  const handleAdminLogout = () => {
-    setIsAdminLoggedIn(false);
-    localStorage.removeItem('anti_admin_logged_in');
-    navigate('/');
-    setToastData({
-      title: 'خروج از پنل مدیریت',
-      message: 'شما با موفقیت از پنل ادمین خارج شدید.',
-      position: 'center',
-    });
+  const handleAdminLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error('❌ خطا در خروج Admin:', error);
+        return;
+      }
+
+      setIsAdminLoggedIn(false);
+      navigate('/');
+
+      setToastData({
+        title: 'خروج از پنل مدیریت',
+        message: 'شما با موفقیت از پنل ادمین خارج شدید.',
+        position: 'center',
+      });
+    } catch (error) {
+      console.error('❌ خطای غیرمنتظره در Logout:', error);
+    }
   };
 
-  // Check if any modal or drawer is active to hide BackToTop button
   const isAnyModalOpen = Boolean(
     isPhilosophyOpen ||
     isGrasseOpen ||
@@ -120,7 +180,6 @@ export default function App() {
     quickViewProduct
   );
 
-  // Cart Handlers
   const handleAddToCart = (product) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === product.id);
@@ -164,9 +223,26 @@ export default function App() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  if (isAuthChecking) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#0f0d0b',
+          color: '#e8a956',
+          fontFamily: 'inherit',
+        }}
+      >
+        در حال بررسی دسترسی...
+      </div>
+    );
+  }
+
   return (
     <Routes>
-      {/* 1. Admin Login Route (/admin-login) */}
       <Route
         path="/admin-login"
         element={
@@ -182,27 +258,21 @@ export default function App() {
         }
       />
 
-      {/* 2. Admin Panel Route (/admin) - Fullscreen Edge-to-Edge */}
       <Route
         path="/admin"
         element={
           isAdminLoggedIn ? (
-            <AdminPanel
-              isOpen={true}
-              onClose={handleAdminLogout}
-            />
+            <AdminPanel isOpen={true} onClose={handleAdminLogout} />
           ) : (
             <Navigate to="/admin-login" replace />
           )
         }
       />
 
-      {/* 3. Main Luxury Storefront Route */}
       <Route
         path="*"
         element={
           <div className="anti-app-root">
-            {/* Navigation */}
             <Navbar
               cartCount={cart.reduce((total, item) => total + item.quantity, 0)}
               onOpenCart={() => setIsCartOpen(true)}
@@ -214,29 +284,20 @@ export default function App() {
             />
 
             <main>
-              {/* Editorial Hero Section with overlapping Floating Feature Box */}
               <Hero
                 onExploreClick={scrollToCollection}
                 onWatchStory={() => setIsStoryOpen(true)}
               />
 
-              {/* Brand Philosophy & Asymmetric Collage */}
-              <About
-                onDiscoverClick={() => setIsPhilosophyOpen(true)}
-              />
+              <About onDiscoverClick={() => setIsPhilosophyOpen(true)} />
 
-              {/* 5-Product Collection Grid */}
               <ProductGrid
                 onAddToCart={handleAddToCart}
                 onQuickView={(product) => setQuickViewProduct(product)}
               />
 
-              {/* Wide Cinematic Promotional Banner */}
-              <PromotionalBanner
-                onShopNow={scrollToCollection}
-              />
+              <PromotionalBanner onShopNow={scrollToCollection} />
 
-              {/* Best Sellers & Art of Perfumery */}
               <BestSellers
                 onAddToCart={handleAddToCart}
                 onQuickView={(product) => setQuickViewProduct(product)}
@@ -246,13 +307,10 @@ export default function App() {
                 }}
               />
 
-              {/* Customer Testimonial & Trust Badges */}
               <Testimonials />
 
-              {/* Frequently Asked Questions (Shipping, Delivery & Authenticity Guarantee) */}
               <FAQ />
 
-              {/* Newsletter Subscription */}
               <Newsletter
                 onSubscribeSuccess={(email) => {
                   setToastData({
@@ -263,7 +321,6 @@ export default function App() {
               />
             </main>
 
-            {/* Minimal Luxury Footer */}
             <Footer
               onOpenPhilosophy={() => setIsPhilosophyOpen(true)}
               onOpenGrasse={() => setIsGrasseOpen(true)}
@@ -272,7 +329,6 @@ export default function App() {
               onOpenCareer={() => setIsCareerOpen(true)}
             />
 
-            {/* Modals & Drawers */}
             <CartDrawer
               isOpen={isCartOpen}
               onClose={() => setIsCartOpen(false)}
@@ -369,13 +425,8 @@ export default function App() {
               onSelectProduct={(product) => setQuickViewProduct(product)}
             />
 
-            {/* Toast Notification */}
-            <Toast
-              toast={toastData}
-              onClose={() => setToastData(null)}
-            />
+            <Toast toast={toastData} onClose={() => setToastData(null)} />
 
-            {/* Holographic Back to Top Button */}
             <BackToTop isModalOpen={isAnyModalOpen} />
           </div>
         }
