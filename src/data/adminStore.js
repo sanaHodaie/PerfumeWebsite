@@ -1,560 +1,962 @@
 import { useState, useEffect } from 'react';
+
 import {
   PRODUCTS as INITIAL_PRODUCTS,
-  FAQ_ITEMS as INITIAL_FAQS,
 } from './products';
-
-
 import {
   getAllProducts,
   createProduct,
   updateProduct as updateProductInSupabase,
   deleteProduct as deleteProductFromSupabase,
+
+  getAllFaqs,
+  createFaq,
+  updateFaq as updateFaqInSupabase,
+  deleteFaq as deleteFaqFromSupabase,
 } from '../lib/productsApi';
 
 
+// ============================================================
+// Global State
+// ============================================================
+
+let globalListeners = [];
+let cachedState = null;
+let productsLoadPromise = null;
+let faqsLoadPromise = null;
+
+
+// ============================================================
+// LocalStorage Keys
+// ============================================================
+
 const STORAGE_KEYS = {
   PRODUCTS: 'anti_admin_products_v1',
-  FAQS: 'anti_admin_faqs_v1',
   BRAND_CONTENT: 'anti_admin_brand_content_v1',
   CONTACT_INFO: 'anti_admin_contact_info_v1',
-  FARM_BOOKINGS: 'anti_admin_farm_bookings_v1',
-  CAREER_APPS: 'anti_admin_career_apps_v1',
-  ADMIN_THEME: 'anti_admin_theme_pref_v1',
-  ADMIN_PROFILE: 'anti_admin_profile_data_v1',
-  COUPONS: 'anti_admin_coupons_list_v1',
+  ADMIN_PROFILE: 'anti_admin_profile_v1',
+  COUPONS: 'anti_admin_coupons_v1',
 };
 
-export const INITIAL_ADMIN_PROFILE = {
-  username: 'admin',
-  fullName: 'مدیر ارشد برند آنتی',
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
-  role: 'مدیریت کل سیستم و پرتال VIP',
-  email: 'admin@anti-perfume.ir',
-};
 
-export const INITIAL_COUPONS = [
-  {
-    id: 1,
-    code: 'ANTI-VIP',
-    discountPercent: 20,
-    description: 'تخفیف اختصاصی اعضای کلوب اشرافی آنتی',
-    minPurchase: 2000000,
-    expiresAt: '۱۴۰۴/۱۲/۲۹',
-    usageCount: 48,
-    maxUsage: 100,
-    isActive: true,
-  },
-  {
-    id: 2,
-    code: 'ROSE2026',
-    discountPercent: 15,
-    description: 'جشنواره بهاره برداشت گل سرخ سنتیفولیا',
-    minPurchase: 1500000,
-    expiresAt: '۱۴۰۴/۰۶/۳۱',
-    usageCount: 85,
-    maxUsage: 200,
-    isActive: true,
-  },
-  {
-    id: 3,
-    code: 'NOUR10',
-    discountPercent: 10,
-    description: 'کد هدیه اولین سفارش خریداران محترم',
-    minPurchase: 1000000,
-    expiresAt: '۱۴۰۵/۰۱/۰۱',
-    usageCount: 194,
-    maxUsage: 500,
-    isActive: true,
-  },
-];
+// ============================================================
+// Default Data
+// ============================================================
 
-export const INITIAL_BRAND_CONTENT = {
+const INITIAL_BRAND_CONTENT = {
   hero: {
-    brand: "آنتی",
-    badge: "دنیای رایحه‌های خاص",
-    headlinePrefix: "رایحه‌ای که",
-    headlineHighlight: "در خاطر می‌ماند",
-    description: "آمیزه‌ای ناب از خالص‌ترین عصاره‌ها و گلبرگ‌های دست‌چین شده؛ خلق شده با هنر اصیل عطرسازی فرانسوی برای آنانی که می‌خواهند ردپایی جاودان بر جای بگذارند.",
-    heroImage: "/Gemini_Generated_Image_fifj8afifj8afifj.jpg",
+    title: 'عطر خود را پیدا کنید',
+    subtitle: 'تجربه‌ای متفاوت از دنیای عطر و رایحه',
   },
-  philosophy: {
-    heroImage: "/anti_crystal_parfum.jpg",
-    badge: "مانیفست خانه عطر آنتی • پاریس و تهران",
-    title: "فلسفه برند آنتی؛ کیمیاگری جاودانگی و شکوه",
-    lead: "در آنتی، ما معتقدیم که عطر، نامرئی‌ترین لباس و عمیق‌ترین بازتاب از اصالت درون است؛ ردپایی از نور که پس از گذشتن شما، جاودانه باقی می‌ماند.",
-    pillar1Title: "خلوص افسانه‌ای عصاره‌ها",
-    pillar1Desc: "عطرهای ما با درجه غلظت اکستریت د پرفوم (بالای ۳۰٪ اسانس خالص روغنی) ساخته می‌شوند تا پخش بو و ماندگاری فراتر از ۲۴ ساعت را تضمین نمایند.",
-    pillar2Title: "کریستال‌های تراش‌خورده با دست",
-    pillar2Desc: "هر شیشه کریستالی آنتی اثری یکتا از بلورسازان چیره‌دست است که با الهام از معماری کلاسیک فرانسوی و هنر معاصر با ظرافت تراش خورده است.",
-    pillar3Title: "پایداری و احترام به آفرینش",
-    pillar3Desc: "تمام مواد اولیه از کشت‌های ارگانیک مزارع محافظت‌شده تامین شده و ۱۰۰٪ بدون آزمایش بر روی حیوانات و سازگار با محیط زیست فرآوری می‌شوند.",
-    pillar4Title: "هویت انحصاری رایحه‌ها",
-    pillar4Desc: "فرمولاسیون رایحه‌های آنتی در انحصار آزمایشگاه‌های ما در شهر گراس فرانسه بوده و به هیچ وجه تکرار یا کپی‌برداری از برندهای تجاری نیست.",
+
+  about: {
+    title: 'درباره ما',
+    description: '',
   },
-  grasse: {
-    heroImage: "/pink_rose_petals.jpg",
-    locationBadge: "پرووانس، فرانسه و دامنه‌های زاگرس • Grasse & Zagros",
-    title: "مزارع اختصاصی گل گراس؛ مهد عطرآفرینی جهان",
-    lead: "جایی که جادوی خاک پرووانس و نسیم مدیترانه با دستان کهنه‌کار گل‌چینان پیوند می‌خورد تا گران‌بهاترین قطرات عطر جهان متولد شوند.",
-    subtitle: "روایت گل‌های اصیل سنتیفولیا",
-    description: "در پناه تپه‌های آفتاب‌گیر و خاک زرخیز گراس، گلستان‌های خانوادگی آنتی نسل به نسل از قرن نوزدهم پاسداری شده‌اند. گل رز سنتیفولیا (گل سرخ صدپر) تنها در ماه مه و در ساعات نخستین سپیده‌دم پیش از طلوع آفتاب چیده می‌شود؛ زمانی که قطرات شبنم، رایحه جادویی و لطیف گلبرگ‌ها را در اوج تازگی نگاه داشته‌اند.",
-    farmStat1Num: "۳۵ هکتار",
-    farmStat1Label: "وسعت مزارع ارگانیک گراس و زاگرس",
-    farmStat2Num: "۴۰۰ کیلوگرم",
-    farmStat2Label: "گلبرگ برای ۱ لیتر اسانس خالص",
-    farmStat3Num: "۱۰۰٪ طبیعی",
-    farmStat3Label: "برداشت سنتی با دست بدون ماشین‌آلات",
-    farmStat4Num: "مه و ژوئن",
-    farmStat4Label: "فصل زرین چیدن گل‌های نادر",
+
+  footer: {
+    description: '',
   },
-  glasscraft: {
-    heroImage: "/anti_crystal_parfum.jpg",
-    badge: "میراث بلورسازان استادکار • Master Glassmakers",
-    title: "هنر شیشه‌گری دست‌ساز؛ تندیس‌های کریستالی نور و زمان",
-    lead: "هر بطری عطر آنتی، نه صرفاً یک ظرف، بلکه یک مجسمه کریستالی نفیس و بی‌تکرار است که در کوره با دمیدن آتش و دم صنعتگران چیره‌دست جان می‌گیرد.",
-    weight: "۴۸۰ گرم",
-    karat: "۲۴ عیار",
-    handmade: "۱۰۰٪ دست‌ساز",
-  },
-  eco: {
-    heroImage: "/pink_rose_petals.jpg",
-    badge: "پایداری لوکس • Sustainable Luxury Manifesto",
-    title: "مسئولیت زیست‌محیطی؛ شکوه در هم‌نوایی با زمین",
-    lead: "تجمل واقعی در هزاره جدید، محافظت از منشأ زیبایی‌هاست. در خانه عطر آنتی، ما هنر اصیل را در توازن کامل با سلامت مادر زمین معنا کرده‌ایم.",
-    treeStat: "۱ نهال بلوط",
-    treeStatLabel: "به ازای هر بطری فروخته‌شده",
-    recycleStat: "۹۵٪",
-    recycleStatLabel: "بازچرخانی آب تقطیر اسانس‌ها",
+};
+
+
+const INITIAL_CONTACT_INFO = {
+  phone: '',
+  email: '',
+  address: '',
+  instagram: '',
+  telegram: '',
+};
+
+
+const INITIAL_ADMIN_PROFILE = {
+  name: 'مدیر فروشگاه',
+  email: '',
+};
+
+
+const INITIAL_COUPONS = [];
+
+
+// ============================================================
+// LocalStorage Helpers
+// ============================================================
+
+const saveToLocalStorage = (key, value) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (error) {
+    console.error('❌ خطا در ذخیره LocalStorage:', error);
   }
 };
 
-export const INITIAL_CONTACT_INFO = {
-  instagram: "@anti.parfums",
-  instagramLink: "https://instagram.com/anti.parfums",
-  telegram: "@anti_concierge",
-  telegramLink: "https://t.me/anti_concierge",
-  whatsapp: "+989123456789",
-  whatsappLink: "https://wa.me/989123456789",
-  phone: "۰۲۱-۲۲۰۰۵۵۴۴",
-  email: "concierge@anti-perfume.ir",
-  address: "تهران، الهیه، خیابان فرشته، برج دیپلمات، طبقه اختصاصی آنتی",
-  workingHours: "شنبه تا پنج‌شنبه ۹:۰۰ الی ۲۱:۰۰ (پشتیبانی ۲۴ ساعته VIP)",
+
+const loadFromLocalStorage = (key, fallback) => {
+  try {
+    const stored = localStorage.getItem(key);
+
+    if (!stored) {
+      return fallback;
+    }
+
+    return JSON.parse(stored);
+  } catch (error) {
+    console.error(`❌ خطا در خواندن ${key} از LocalStorage:`, error);
+
+    return fallback;
+  }
 };
 
-// Global Store State Holder
-let globalListeners = [];
-let cachedState = null;
 
-let productsLoadPromise = null;
+// ============================================================
+// Notify Global Listeners
+// ============================================================
 
-async function loadProductsFromSupabase() {
+const notifyListeners = () => {
+  if (!cachedState) {
+    return;
+  }
+
+  globalListeners.forEach((listener) => {
+    listener(cachedState);
+  });
+};
+
+
+// ============================================================
+// Ensure Cached State Exists
+// ============================================================
+// ✅ این تابع جدید اضافه شده تا در توابع CRUD
+//    از null بودن cachedState جلوگیری شود.
+//    این تابع منطق را تغییر نمی‌دهد، فقط امنیت اضافه می‌کند.
+
+const ensureCachedState = () => {
+  if (!cachedState) {
+    cachedState = loadInitialState();
+  }
+
+  return cachedState;
+};
+
+
+// ============================================================
+// Load Products From Supabase
+// ============================================================
+
+const loadProductsFromSupabase = async () => {
   if (productsLoadPromise) {
     return productsLoadPromise;
   }
 
   productsLoadPromise = getAllProducts()
     .then((products) => {
+      ensureCachedState();
+
       cachedState = {
         ...cachedState,
         products,
       };
 
       notifyListeners();
+
+      console.log(
+        '🟢 محصولات از Supabase بارگذاری شدند:',
+        products
+      );
+
       return products;
     })
     .catch((error) => {
       console.error(
-        '❌ خطا در دریافت محصولات از Supabase:',
+        '❌ خطا در بارگذاری محصولات از Supabase:',
         error
       );
 
-      productsLoadPromise = null;
       throw error;
+    })
+    .finally(() => {
+      productsLoadPromise = null;
     });
 
   return productsLoadPromise;
-}
+};
 
-function loadInitialState() {
-  if (typeof window === 'undefined') {
-    return {
-      products: INITIAL_PRODUCTS,
-      faqs: INITIAL_FAQS,
-      brandContent: INITIAL_BRAND_CONTENT,
-      contactInfo: INITIAL_CONTACT_INFO,
-      farmBookings: [],
-      careerApplications: [],
-      
-      adminTheme: 'dark', // matches screenshot theme sombre default
-      adminProfile: INITIAL_ADMIN_PROFILE,
-      coupons: INITIAL_COUPONS,
-    };
+
+// ============================================================
+// Load FAQs From Supabase
+// ============================================================
+
+const loadFaqsFromSupabase = async () => {
+  if (faqsLoadPromise) {
+    return faqsLoadPromise;
   }
 
-  try {
-    const storedFaqs = localStorage.getItem(STORAGE_KEYS.FAQS);
-    const storedBrandContent = localStorage.getItem(STORAGE_KEYS.BRAND_CONTENT);
-    const storedContactInfo = localStorage.getItem(STORAGE_KEYS.CONTACT_INFO);
-    const storedBookings = localStorage.getItem(STORAGE_KEYS.FARM_BOOKINGS);
-    const storedCareerApps = localStorage.getItem(STORAGE_KEYS.CAREER_APPS);
-    const storedTheme = localStorage.getItem(STORAGE_KEYS.ADMIN_THEME);
-    const storedProfile = localStorage.getItem(STORAGE_KEYS.ADMIN_PROFILE);
-    const storedCoupons = localStorage.getItem(STORAGE_KEYS.COUPONS);
+  faqsLoadPromise = getAllFaqs()
+    .then((faqs) => {
+      ensureCachedState();
 
-    return {
-      products: INITIAL_PRODUCTS,
-      faqs: storedFaqs ? JSON.parse(storedFaqs) : INITIAL_FAQS,
-      brandContent: storedBrandContent
-        ? { ...INITIAL_BRAND_CONTENT, ...JSON.parse(storedBrandContent) }
-        : INITIAL_BRAND_CONTENT,
-      contactInfo: storedContactInfo
-        ? { ...INITIAL_CONTACT_INFO, ...JSON.parse(storedContactInfo) }
-        : INITIAL_CONTACT_INFO,
-      farmBookings: storedBookings ? JSON.parse(storedBookings) : [
-        {
-          id: 1,
-          name: "دکتر کیوان سهرابی",
-          phone: "09121112233",
-          date: "۱۴۰۳/۰۶/۱۵",
-          status: "تایید شده",
-        },
-        {
-          id: 2,
-          name: "مهندس نیلوفر ادیب",
-          phone: "09124445566",
-          date: "۱۴۰۳/۰۶/۲۲",
-          status: "در انتظار هماهنگی",
-        }
-      ],
-      careerApplications: storedCareerApps ? JSON.parse(storedCareerApps) : [
-        {
-          id: 1,
-          fullName: "سارا رضوانی",
-          mobile: "09127778899",
-          email: "sara.rezvani@gmail.com",
-          role: "طراح و ارزیاب فرمولاسیون رایحه",
-          date: "۱۴۰۳/۰۶/۱۸",
-          message: "دارای ۵ سال تجربه در آزمایشگاه‌های اسانس‌شناسی و کارشناسی ارشد بیوشیمی."
-        }
-      ],
-      adminTheme: storedTheme || 'light',
-      adminProfile: storedProfile ? { ...INITIAL_ADMIN_PROFILE, ...JSON.parse(storedProfile) } : INITIAL_ADMIN_PROFILE,
-      coupons: storedCoupons ? JSON.parse(storedCoupons) : INITIAL_COUPONS,
-    };
-  } catch (err) {
-    console.error("Error loading admin store from localStorage:", err);
-    return {
-      products: INITIAL_PRODUCTS,
-      faqs: INITIAL_FAQS,
-      brandContent: INITIAL_BRAND_CONTENT,
-      contactInfo: INITIAL_CONTACT_INFO,
-      farmBookings: [],
-      careerApplications: [],
-      adminTheme: 'light',
-      adminProfile: INITIAL_ADMIN_PROFILE,
-      coupons: INITIAL_COUPONS,
-    };
-  }
-}
+      cachedState = {
+        ...cachedState,
+        faqs,
+      };
 
-function notifyListeners() {
-  globalListeners.forEach((listener) => listener(cachedState));
-}
+      notifyListeners();
 
-function saveToLocalStorage(key, val) {
-  try {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(key, typeof val === 'string' ? val : JSON.stringify(val));
-    }
-  } catch (e) {
-    console.error("Failed saving to localStorage", e);
-  }
-}
+      console.log(
+        '🟢 FAQها از Supabase بارگذاری شدند:',
+        faqs
+      );
 
-export function useAdminStore() {
-  if (!cachedState) {
-    cachedState = loadInitialState();
-  }
+      return faqs;
+    })
+    .catch((error) => {
+      console.error(
+        '❌ خطا در بارگذاری FAQها از Supabase:',
+        error
+      );
 
-  const [state, setState] = useState(cachedState);
-
-useEffect(() => {
-  const listener = (newState) => {
-    setState({ ...newState });
-  };
-
-  globalListeners.push(listener);
-
-  loadProductsFromSupabase().catch(() => {
-    // خطا قبلاً داخل loadProductsFromSupabase لاگ شده
-  });
-
-  return () => {
-    globalListeners = globalListeners.filter((l) => l !== listener);
-  };
-}, []);
-
-  // Actions
-const addProduct = async (newProd) => {
-  try {
-    console.log('🟡 addProduct اجرا شد:', newProd);
-
-    const product = await createProduct({
-      name: newProd.name,
-      englishName: newProd.englishName,
-      description: newProd.description,
-      price: newProd.price,
-      volume: newProd.volume,
-      category: newProd.category,
-
-      rating: newProd.rating || 5,
-      reviewsCount: newProd.reviewsCount || 0,
-
-      isBestSeller: Boolean(newProd.isBestSeller),
-      isActive: newProd.isActive !== false,
-
-      image: newProd.image,
-
-      // ⭐ مهم: نت‌های عطر باید هنگام ایجاد هم ارسال شوند
-      notes: {
-        top: newProd.notes?.top || '',
-        heart: newProd.notes?.heart || '',
-        base: newProd.notes?.base || '',
-      },
+      throw error;
+    })
+    .finally(() => {
+      faqsLoadPromise = null;
     });
 
-    console.log('🟢 محصول در Supabase ساخته شد:', product);
+  return faqsLoadPromise;
+};
 
-    const updatedProducts = [
-      product,
-      ...cachedState.products,
-    ];
 
-    cachedState = {
-      ...cachedState,
-      products: updatedProducts,
+// ============================================================
+// Initial State
+// ============================================================
+
+const loadInitialState = () => {
+  if (cachedState) {
+    return cachedState;
+  }
+
+  const storedProducts = loadFromLocalStorage(
+    STORAGE_KEYS.PRODUCTS,
+    INITIAL_PRODUCTS
+  );
+
+  const storedBrandContent = loadFromLocalStorage(
+    STORAGE_KEYS.BRAND_CONTENT,
+    INITIAL_BRAND_CONTENT
+  );
+
+  const storedContactInfo = loadFromLocalStorage(
+    STORAGE_KEYS.CONTACT_INFO,
+    INITIAL_CONTACT_INFO
+  );
+
+  const storedAdminProfile = loadFromLocalStorage(
+    STORAGE_KEYS.ADMIN_PROFILE,
+    INITIAL_ADMIN_PROFILE
+  );
+
+  const storedCoupons = loadFromLocalStorage(
+    STORAGE_KEYS.COUPONS,
+    INITIAL_COUPONS
+  );
+
+
+  cachedState = {
+    products: storedProducts,
+    faqs: [],
+
+    brandContent: storedBrandContent,
+    contactInfo: storedContactInfo,
+    adminProfile: storedAdminProfile,
+    coupons: storedCoupons,
+  };
+
+
+  return cachedState;
+};
+
+
+// ============================================================
+// Main Hook
+// ============================================================
+
+export const useAdminStore = () => {
+  const [state, setState] = useState(() => {
+    return loadInitialState();
+  });
+
+
+  // ==========================================================
+  // Subscribe + Initial Supabase Load
+  // ==========================================================
+
+  useEffect(() => {
+    const listener = (newState) => {
+      setState({
+        ...newState,
+      });
     };
 
-    notifyListeners();
 
-    return product;
-  } catch (error) {
-    console.error(
-      '❌ خطا در اضافه کردن محصول به Supabase:',
-      error
-    );
+    globalListeners.push(listener);
 
-    throw error;
-  }
-};
-const updateProduct = async (id, updatedFields) => {
-  console.log('🟡 updateProduct اجرا شد:', id, updatedFields);
-  try {
-    const updatedProduct = await updateProductInSupabase(id, updatedFields);
 
-    const updated = cachedState.products.map((p) =>
-      p.id === id ? updatedProduct : p
-    );
+    // Load Products
+    loadProductsFromSupabase().catch(() => {
+      // خطا قبلاً داخل loadProductsFromSupabase لاگ شده
+    });
 
-    cachedState = { ...cachedState, products: updated };
 
-    notifyListeners();
+    // Load FAQs
+    loadFaqsFromSupabase().catch(() => {
+      // خطا قبلاً داخل loadFaqsFromSupabase لاگ شده
+    });
 
-    return updatedProduct;
-  } catch (error) {
-    console.error('❌ خطا در ویرایش محصول در Supabase:', error);
-    throw error;
-  }
-};
 
-const deleteProduct = async (id) => {
-  console.log('🟡 deleteProduct اجرا شد:', id);
-
-  try {
-    await deleteProductFromSupabase(id);
-
-    const updated = cachedState.products.filter((p) => p.id !== id);
-
-    cachedState = {
-      ...cachedState,
-      products: updated,
+    return () => {
+      globalListeners = globalListeners.filter(
+        (l) => l !== listener
+      );
     };
+  }, []);
 
-    notifyListeners();
 
-    console.log('🟢 محصول از Supabase حذف شد:', id);
+  // ==========================================================
+  // Product Actions
+  // ==========================================================
 
-    return true;
-  } catch (error) {
-    console.error('❌ خطا در حذف محصول از Supabase:', error);
-    throw error;
-  }
-};
+  const addProduct = async (newProd) => {
+    try {
+      ensureCachedState();
 
-  const addFaq = (faqData) => {
-    const id = Date.now();
-    const newFaq = { ...faqData, id };
-    const updated = [...cachedState.faqs, newFaq];
-    cachedState = { ...cachedState, faqs: updated };
-    saveToLocalStorage(STORAGE_KEYS.FAQS, updated);
-    notifyListeners();
-    return newFaq;
+      console.log(
+        '🟡 addProduct اجرا شد:',
+        newProd
+      );
+
+
+      const product = await createProduct({
+        name: newProd.name,
+        englishName: newProd.englishName,
+        description: newProd.description,
+        price: newProd.price,
+        volume: newProd.volume,
+        category: newProd.category,
+
+        rating: newProd.rating || 5,
+        reviewsCount: newProd.reviewsCount || 0,
+
+        isBestSeller: Boolean(
+          newProd.isBestSeller
+        ),
+
+        isActive:
+          newProd.isActive !== false,
+
+        image: newProd.image,
+
+        notes: {
+          top: newProd.notes?.top || '',
+          heart: newProd.notes?.heart || '',
+          base: newProd.notes?.base || '',
+        },
+      });
+
+
+      console.log(
+        '🟢 محصول در Supabase ساخته شد:',
+        product
+      );
+
+
+      const updatedProducts = [
+        product,
+        ...cachedState.products,
+      ];
+
+
+      cachedState = {
+        ...cachedState,
+        products: updatedProducts,
+      };
+
+
+      notifyListeners();
+
+
+      return product;
+
+    } catch (error) {
+      console.error(
+        '❌ خطا در اضافه کردن محصول به Supabase:',
+        error
+      );
+
+      throw error;
+    }
   };
 
-  const updateFaq = (id, updatedFields) => {
-    const updated = cachedState.faqs.map((f) => (f.id === id ? { ...f, ...updatedFields } : f));
-    cachedState = { ...cachedState, faqs: updated };
-    saveToLocalStorage(STORAGE_KEYS.FAQS, updated);
-    notifyListeners();
+
+  const updateProduct = async (
+    id,
+    updatedFields
+  ) => {
+    console.log(
+      '🟡 updateProduct اجرا شد:',
+      id,
+      updatedFields
+    );
+
+
+    try {
+      ensureCachedState();
+
+      const updatedProduct =
+        await updateProductInSupabase(
+          id,
+          updatedFields
+        );
+
+
+      const updated =
+        cachedState.products.map((p) =>
+          p.id === id
+            ? updatedProduct
+            : p
+        );
+
+
+      cachedState = {
+        ...cachedState,
+        products: updated,
+      };
+
+
+      notifyListeners();
+
+
+      return updatedProduct;
+
+    } catch (error) {
+      console.error(
+        '❌ خطا در ویرایش محصول در Supabase:',
+        error
+      );
+
+      throw error;
+    }
   };
 
-  const deleteFaq = (id) => {
-    const updated = cachedState.faqs.filter((f) => f.id !== id);
-    cachedState = { ...cachedState, faqs: updated };
-    saveToLocalStorage(STORAGE_KEYS.FAQS, updated);
-    notifyListeners();
+
+  const deleteProduct = async (id) => {
+    console.log(
+      '🟡 deleteProduct اجرا شد:',
+      id
+    );
+
+
+    try {
+      ensureCachedState();
+
+      await deleteProductFromSupabase(id);
+
+
+      const updated =
+        cachedState.products.filter(
+          (p) => p.id !== id
+        );
+
+
+      cachedState = {
+        ...cachedState,
+        products: updated,
+      };
+
+
+      notifyListeners();
+
+
+      console.log(
+        '🟢 محصول از Supabase حذف شد:',
+        id
+      );
+
+
+      return true;
+
+    } catch (error) {
+      console.error(
+        '❌ خطا در حذف محصول از Supabase:',
+        error
+      );
+
+      throw error;
+    }
   };
 
-  const updateBrandContent = (sectionKey, sectionData) => {
+
+  // ==========================================================
+  // FAQ Actions
+  // ==========================================================
+
+  const addFaq = async (faqData) => {
+    try {
+      ensureCachedState();
+
+      console.log(
+        '🟡 addFaq اجرا شد:',
+        faqData
+      );
+
+
+      const newFaq = await createFaq({
+        question: faqData.question,
+        answer: faqData.answer,
+        category: faqData.category,
+      });
+
+
+      console.log(
+        '🟢 FAQ در Supabase ساخته شد:',
+        newFaq
+      );
+
+
+      const updated = [
+        newFaq,
+        ...cachedState.faqs,
+      ];
+
+
+      cachedState = {
+        ...cachedState,
+        faqs: updated,
+      };
+
+
+      notifyListeners();
+
+
+      return newFaq;
+
+    } catch (error) {
+      console.error(
+        '❌ خطا در اضافه کردن FAQ به Supabase:',
+        error
+      );
+
+      throw error;
+    }
+  };
+
+
+  const updateFaq = async (
+    id,
+    updatedFields
+  ) => {
+    try {
+      ensureCachedState();
+
+      console.log(
+        '🟡 updateFaq اجرا شد:',
+        id,
+        updatedFields
+      );
+
+
+      const updatedFaq =
+        await updateFaqInSupabase(
+          id,
+          {
+            question:
+              updatedFields.question,
+
+            answer:
+              updatedFields.answer,
+
+            category:
+              updatedFields.category,
+          }
+        );
+
+
+      console.log(
+        '🟢 FAQ در Supabase آپدیت شد:',
+        updatedFaq
+      );
+
+
+      const updated =
+        cachedState.faqs.map(
+          (faq) =>
+            faq.id === id
+              ? updatedFaq
+              : faq
+        );
+
+
+      cachedState = {
+        ...cachedState,
+        faqs: updated,
+      };
+
+
+      notifyListeners();
+
+
+      return updatedFaq;
+
+    } catch (error) {
+      console.error(
+        '❌ خطا در ویرایش FAQ در Supabase:',
+        error
+      );
+
+      throw error;
+    }
+  };
+
+
+  const deleteFaq = async (id) => {
+    try {
+      ensureCachedState();
+
+      console.log(
+        '🟡 deleteFaq اجرا شد:',
+        id
+      );
+
+
+      await deleteFaqFromSupabase(id);
+
+
+      const updated =
+        cachedState.faqs.filter(
+          (faq) => faq.id !== id
+        );
+
+
+      cachedState = {
+        ...cachedState,
+        faqs: updated,
+      };
+
+
+      notifyListeners();
+
+
+      console.log(
+        '🟢 FAQ از Supabase حذف شد:',
+        id
+      );
+
+
+      return true;
+
+    } catch (error) {
+      console.error(
+        '❌ خطا در حذف FAQ از Supabase:',
+        error
+      );
+
+      throw error;
+    }
+  };
+
+
+  // ==========================================================
+  // Brand Content
+  // ==========================================================
+
+  const updateBrandContent = (
+    updatedContent
+  ) => {
+    ensureCachedState();
+
     const updated = {
       ...cachedState.brandContent,
-      [sectionKey]: {
-        ...cachedState.brandContent[sectionKey],
-        ...sectionData,
-      },
+      ...updatedContent,
     };
-    cachedState = { ...cachedState, brandContent: updated };
-    saveToLocalStorage(STORAGE_KEYS.BRAND_CONTENT, updated);
-    notifyListeners();
-  };
 
-  const updateContactInfo = (newContactInfo) => {
-    const updated = { ...cachedState.contactInfo, ...newContactInfo };
-    cachedState = { ...cachedState, contactInfo: updated };
-    saveToLocalStorage(STORAGE_KEYS.CONTACT_INFO, updated);
-    notifyListeners();
-  };
 
-  const addFarmBooking = (booking) => {
-    const newBooking = { ...booking, id: Date.now(), date: new Date().toLocaleDateString('fa-IR') };
-    const updated = [newBooking, ...cachedState.farmBookings];
-    cachedState = { ...cachedState, farmBookings: updated };
-    saveToLocalStorage(STORAGE_KEYS.FARM_BOOKINGS, updated);
-    notifyListeners();
-  };
+    cachedState = {
+      ...cachedState,
+      brandContent: updated,
+    };
 
-  const addCareerApp = (application) => {
-    const newApp = { ...application, id: Date.now(), date: new Date().toLocaleDateString('fa-IR') };
-    const updated = [newApp, ...cachedState.careerApplications];
-    cachedState = { ...cachedState, careerApplications: updated };
-    saveToLocalStorage(STORAGE_KEYS.CAREER_APPS, updated);
-    notifyListeners();
-  };
 
-  const setAdminTheme = (theme) => {
-    cachedState = { ...cachedState, adminTheme: theme };
-    saveToLocalStorage(STORAGE_KEYS.ADMIN_THEME, theme);
-    notifyListeners();
-  };
+    saveToLocalStorage(
+      STORAGE_KEYS.BRAND_CONTENT,
+      updated
+    );
 
-  const updateAdminProfile = (newProfile) => {
-    const updated = { ...cachedState.adminProfile, ...newProfile };
-    cachedState = { ...cachedState, adminProfile: updated };
-    saveToLocalStorage(STORAGE_KEYS.ADMIN_PROFILE, updated);
+
     notifyListeners();
+
+
     return updated;
   };
 
-  const addCoupon = (newCoupon) => {
-    const id = Date.now();
-    const coupon = {
-      ...newCoupon,
-      id,
-      usageCount: 0,
-      isActive: newCoupon.isActive !== undefined ? newCoupon.isActive : true,
+
+  // ==========================================================
+  // Contact Info
+  // ==========================================================
+
+  const updateContactInfo = (
+    updatedInfo
+  ) => {
+    ensureCachedState();
+
+    const updated = {
+      ...cachedState.contactInfo,
+      ...updatedInfo,
     };
-    const updated = [coupon, ...cachedState.coupons];
-    cachedState = { ...cachedState, coupons: updated };
-    saveToLocalStorage(STORAGE_KEYS.COUPONS, updated);
+
+
+    cachedState = {
+      ...cachedState,
+      contactInfo: updated,
+    };
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.CONTACT_INFO,
+      updated
+    );
+
+
     notifyListeners();
+
+
+    return updated;
+  };
+
+
+  // ==========================================================
+  // Admin Profile
+  // ==========================================================
+
+  const updateAdminProfile = (
+    updatedProfile
+  ) => {
+    ensureCachedState();
+
+    const updated = {
+      ...cachedState.adminProfile,
+      ...updatedProfile,
+    };
+
+
+    cachedState = {
+      ...cachedState,
+      adminProfile: updated,
+    };
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.ADMIN_PROFILE,
+      updated
+    );
+
+
+    notifyListeners();
+
+
+    return updated;
+  };
+
+
+  // ==========================================================
+  // Coupons
+  // ==========================================================
+
+  const addCoupon = (coupon) => {
+    ensureCachedState();
+
+    const updated = [
+      coupon,
+      ...cachedState.coupons,
+    ];
+
+
+    cachedState = {
+      ...cachedState,
+      coupons: updated,
+    };
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.COUPONS,
+      updated
+    );
+
+
+    notifyListeners();
+
+
     return coupon;
   };
 
-  const updateCoupon = (id, updatedFields) => {
-    const updated = cachedState.coupons.map((c) => (c.id === id ? { ...c, ...updatedFields } : c));
-    cachedState = { ...cachedState, coupons: updated };
-    saveToLocalStorage(STORAGE_KEYS.COUPONS, updated);
-    notifyListeners();
-  };
 
-  const deleteCoupon = (id) => {
-    const updated = cachedState.coupons.filter((c) => c.id !== id);
-    cachedState = { ...cachedState, coupons: updated };
-    saveToLocalStorage(STORAGE_KEYS.COUPONS, updated);
-    notifyListeners();
-  };
+  const updateCoupon = (
+    id,
+    updatedFields
+  ) => {
+    ensureCachedState();
 
-  const toggleCouponStatus = (id) => {
-    const updated = cachedState.coupons.map((c) => (c.id === id ? { ...c, isActive: !c.isActive } : c));
-    cachedState = { ...cachedState, coupons: updated };
-    saveToLocalStorage(STORAGE_KEYS.COUPONS, updated);
-    notifyListeners();
-  };
+    const updated =
+      cachedState.coupons.map(
+        (coupon) =>
+          coupon.id === id
+            ? {
+                ...coupon,
+                ...updatedFields,
+              }
+            : coupon
+      );
 
-  const incrementCouponUsage = (id) => {
-    const updated = cachedState.coupons.map((c) => {
-      if (c.id === id) {
-        const currentCount = Number(c.usageCount) || 0;
-        const max = Number(c.maxUsage) || 100;
-        const newCount = Math.min(max, currentCount + 1);
-        return { ...c, usageCount: newCount };
-      }
-      return c;
-    });
-    cachedState = { ...cachedState, coupons: updated };
-    saveToLocalStorage(STORAGE_KEYS.COUPONS, updated);
-    notifyListeners();
-  };
 
-  const resetAllToDefaults = () => {
     cachedState = {
       ...cachedState,
-      products: INITIAL_PRODUCTS,
-      faqs: INITIAL_FAQS,
-      brandContent: INITIAL_BRAND_CONTENT,
-      contactInfo: INITIAL_CONTACT_INFO,
-      adminProfile: INITIAL_ADMIN_PROFILE,
-      coupons: INITIAL_COUPONS,
+      coupons: updated,
     };
-    saveToLocalStorage(STORAGE_KEYS.PRODUCTS, INITIAL_PRODUCTS);
-    saveToLocalStorage(STORAGE_KEYS.FAQS, INITIAL_FAQS);
-    saveToLocalStorage(STORAGE_KEYS.BRAND_CONTENT, INITIAL_BRAND_CONTENT);
-    saveToLocalStorage(STORAGE_KEYS.CONTACT_INFO, INITIAL_CONTACT_INFO);
-    saveToLocalStorage(STORAGE_KEYS.ADMIN_PROFILE, INITIAL_ADMIN_PROFILE);
-    saveToLocalStorage(STORAGE_KEYS.COUPONS, INITIAL_COUPONS);
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.COUPONS,
+      updated
+    );
+
+
+    notifyListeners();
+
+
+    return updated.find(
+      (coupon) => coupon.id === id
+    );
+  };
+
+
+  const deleteCoupon = (id) => {
+    ensureCachedState();
+
+    const updated =
+      cachedState.coupons.filter(
+        (coupon) => coupon.id !== id
+      );
+
+
+    cachedState = {
+      ...cachedState,
+      coupons: updated,
+    };
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.COUPONS,
+      updated
+    );
+
+
+    notifyListeners();
+
+
+    return true;
+  };
+
+
+  // ==========================================================
+  // Reset
+  // ==========================================================
+
+  const resetAllToDefaults = () => {
+    ensureCachedState();
+
+    cachedState = {
+      ...cachedState,
+
+      products: INITIAL_PRODUCTS,
+      faqs: [],
+
+      brandContent:
+        INITIAL_BRAND_CONTENT,
+
+      contactInfo:
+        INITIAL_CONTACT_INFO,
+
+      adminProfile:
+        INITIAL_ADMIN_PROFILE,
+
+      coupons:
+        INITIAL_COUPONS,
+    };
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.PRODUCTS,
+      INITIAL_PRODUCTS
+    );
+
+    saveToLocalStorage(
+      STORAGE_KEYS.BRAND_CONTENT,
+      INITIAL_BRAND_CONTENT
+    );
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.CONTACT_INFO,
+      INITIAL_CONTACT_INFO
+    );
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.ADMIN_PROFILE,
+      INITIAL_ADMIN_PROFILE
+    );
+
+
+    saveToLocalStorage(
+      STORAGE_KEYS.COUPONS,
+      INITIAL_COUPONS
+    );
+
+
     notifyListeners();
   };
 
+
+  // ==========================================================
+  // Return
+  // ==========================================================
+
   return {
+    // State
     ...state,
+
+    // Products
     addProduct,
     updateProduct,
     deleteProduct,
+
+    // FAQs
     addFaq,
     updateFaq,
     deleteFaq,
+
+    // Brand
     updateBrandContent,
+
+    // Contact
     updateContactInfo,
-    addFarmBooking,
-    addCareerApp,
-    setAdminTheme,
+
+    // Admin
     updateAdminProfile,
+
+    // Coupons
     addCoupon,
     updateCoupon,
     deleteCoupon,
-    toggleCouponStatus,
-    incrementCouponUsage,
+
+    // Reset
     resetAllToDefaults,
   };
-}
+};

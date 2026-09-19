@@ -248,3 +248,156 @@ export async function deleteProduct(productId) {
 
   return true;
 }
+
+/* =========================================================
+   FAQ — دریافت همه سوالات برای پنل ادمین
+========================================================= */
+
+function mapFaq(faq) {
+  return {
+    id: faq.id,
+    question: faq.question || '',
+    answer: faq.answer || '',
+    category: faq.category || '',
+  };
+}
+
+
+/* =========================================================
+   دریافت همه FAQ ها برای پنل ادمین
+========================================================= */
+
+export async function getAllFaqs() {
+  const { data, error } = await supabase
+    .from('faqs')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) {
+    console.error('❌ Supabase all FAQs error:', error);
+    throw error;
+  }
+
+  return data.map(mapFaq);
+}
+
+
+/* =========================================================
+   دریافت FAQ های سایت
+========================================================= */
+
+export async function getFaqs() {
+  const { data, error } = await supabase
+    .from('faqs')
+    .select('*')
+    .order('id', { ascending: true });
+
+  if (error) {
+    console.error('❌ Supabase FAQs error:', error);
+    throw error;
+  }
+
+  return data.map(mapFaq);
+}
+
+
+/* =========================================================
+   ایجاد FAQ جدید
+========================================================= */
+
+export async function createFaq(faq) {
+  console.log('🟡 createFaq - ارسال به Supabase:', faq);
+
+  const insertData = {
+    question: faq.question || '',
+    answer: faq.answer || '',
+    category: faq.category || '',
+  };
+
+  console.log('📦 داده‌ای که قرار است INSERT شود:', insertData);
+
+  const { data, error } = await supabase
+    .from('faqs')
+    .insert(insertData)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('❌ Supabase create FAQ error:', error);
+    console.error('🔍 message:', error.message);
+    console.error('🔍 details:', error.details);
+    console.error('🔍 hint:', error.hint);
+    console.error('🔍 code:', error.code);
+
+    throw error;
+  }
+
+  console.log('🟢 FAQ واقعاً در Supabase ساخته شد:', data);
+
+  return mapFaq(data);
+}
+
+
+/* =========================================================
+   ویرایش FAQ
+========================================================= */
+
+export async function updateFaq(faqId, updatedFields) {
+  const updateData = {};
+
+  if (updatedFields.question !== undefined) {
+    updateData.question = updatedFields.question;
+  }
+
+  if (updatedFields.answer !== undefined) {
+    updateData.answer = updatedFields.answer;
+  }
+
+  if (updatedFields.category !== undefined) {
+    updateData.category = updatedFields.category;
+  }
+
+  console.log('📦 داده UPDATE FAQ:', updateData);
+
+  const { data, error } = await supabase
+    .from('faqs')
+    .update(updateData)
+    .eq('id', faqId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('❌ Supabase update FAQ error:', error);
+    console.error('🔍 message:', error.message);
+    console.error('🔍 details:', error.details);
+    console.error('🔍 hint:', error.hint);
+    console.error('🔍 code:', error.code);
+
+    throw error;
+  }
+
+  console.log('🟢 FAQ در Supabase آپدیت شد:', data);
+
+  return mapFaq(data);
+}
+
+
+/* =========================================================
+   حذف FAQ
+========================================================= */
+
+export async function deleteFaq(faqId) {
+  const { error } = await supabase
+    .from('faqs')
+    .delete()
+    .eq('id', faqId);
+
+  if (error) {
+    console.error('❌ Supabase delete FAQ error:', error);
+    throw error;
+  }
+
+  console.log('🗑️ FAQ از Supabase حذف شد:', faqId);
+
+  return true;
+}
